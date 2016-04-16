@@ -1,0 +1,22 @@
+{
+  "name": "monitorrent-logo",
+  "version": "1.0.0",
+  "description": "Logo Setup for Monitorrent",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexander Puzynia <werwolf.by@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/werwolfby/monitorrent-logo"
+  },
+  "dependencies": {
+    "fbjs": "^0.2.1",
+    "material-ui": "^0.14.4",
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8",
+    "react-tap-event-plugin": "^0.2.0"
+  }
+}
