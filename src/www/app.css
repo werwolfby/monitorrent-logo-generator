@@ -1,9 +1,28 @@
+html, body {
+    height: 100%;
+}
+
 html {
   font-family: 'Roboto', sans-serif;
+  position: relative;
 }
 
 body {
   margin: 0px;
   font-size: 13px;
   line-height: 20px;
+}
+
+h1 {
+  margin: 0px;
+}
+
+#app {
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  overflow:hidden;
+  z-index:-1;
 }

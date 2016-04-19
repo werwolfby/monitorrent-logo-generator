@@ -56,6 +56,11 @@ var config = {
         test: /\.(js|jsx)$/,  //All .js and .jsx files
         loaders: ['react-hot', 'babel'], //react-hot is like browser sync and babel loads jsx and es6-7
         exclude: [nodeModulesPath]
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css?modules',
+        include: /flexboxgrid/,
       }
     ]
   },
