@@ -20,10 +20,10 @@ class Content extends React.Component {
         let path = [
             'M', zcx - this.props.left, zcy - this.props.thickness / 2,
             'L', zcx + this.props.right, zcy - this.props.thickness / 2,
-            'L', zcx + this.props.right, zcy - this.props.headTop,
+            ...(this.props.headType === 0 ? ['L', zcx + this.props.right, zcy - this.props.headTop] : []),
             'L', zcx + this.props.right + this.props.headThickness, zcy - this.props.headTop,
             'Q', qx, qy, zcx + this.props.right + this.props.headThickness, zcy + this.props.headBottom,
-            'L', zcx + this.props.right, zcy + this.props.headBottom,
+            ...(this.props.headType === 0 ? ['L', zcx + this.props.right, zcy + this.props.headBottom]: []),
             'L', zcx + this.props.right, zcy + this.props.thickness / 2,
             'L', zcx - this.props.left, zcy + this.props.thickness / 2,
             'Z',
@@ -58,6 +58,7 @@ Content.propTypes = {
     headBottom: React.PropTypes.number,
     headQdx: React.PropTypes.number,
     headQdy: React.PropTypes.number,
+    headType: React.PropTypes.number,
     size: React.PropTypes.number,
 };
 Content.defaultProps = {
@@ -73,6 +74,7 @@ Content.defaultProps = {
     headQdx: 0.5,
     headQdy: 0.5,
     size: 320,
+    headType: 0,
 };
 
 export default Content;

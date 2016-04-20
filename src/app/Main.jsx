@@ -60,14 +60,14 @@ class Main extends React.Component {
       rotate: -22,
       cx: 0.47,
       cy: 0.4,
-      thickness: 0.07,
+      thickness: 0.06,
       left: 0.45,
       right: 0.35,
-      headThickness: 0.11,
+      headThickness: 0.05,
       headTop: 0.16,
       headBottom: 0.22,
-      headQdx: 0.5,
-      headQdy: 0.5,
+      headQdx: 0.32,
+      headQdy: 0.18,
     };
   }
 
@@ -95,7 +95,7 @@ class Main extends React.Component {
         />
         <div className="container-content">
           <div className="content">
-            <Content {...this.state}/>
+            <Content {...this.state} headType={0}/>
           </div>
           <Paper rounded={false} className="settings" style={{overflow: 'auto'}} zDepth={3}>
             {sliders}
