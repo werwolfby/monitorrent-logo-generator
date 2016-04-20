@@ -15,10 +15,6 @@ const muiTheme = getMuiTheme({
   accent1Color: Colors.blueGrey500,
 });
 
-let paperStyle = {
-  height: '100%',
-};
-
 class Main extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -37,30 +33,20 @@ class Main extends React.Component {
 
   render() {
     return (
-      <div style={{height: '100%'}}>
-        <Row xs="12">
-          <AppBar
-            title="MoniTorrent Logo Generator"
-            iconElementLeft={<div></div>}
-          />
-        </Row>
-        <Row style={{height: '100%'}}>
-          <Col xs={12} style={{height: '100%'}}>
-            <Row center="xs"style={{height: '100%'}}>
-              <Col xs={9} style={{padding:0, height: '100%'}}>
-                <Paper rounded={false} style={paperStyle} zDepth={1}>
-                  <h1>Content</h1>
-                </Paper>
-              </Col>
-              <Col xs={3} style={{padding:0, height: '100%'}}>
-                <Paper rounded={false} style={paperStyle} zDepth={3}>
-                  <div>Value 1</div>
-                  <Slider value={this.state.value1} onChange={this.handleOnChange}/>
-                </Paper>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+      <div className="container">
+        <AppBar className="app-bar"
+          title="MoniTorrent Logo Generator"
+          iconElementLeft={<div></div>}
+        />
+        <div className="container-content">
+          <Paper rounded={false} className="content" zDepth={1}>
+            <h1>Content</h1>
+          </Paper>
+          <Paper rounded={false} className="settings" zDepth={3}>
+            <div>Value 1</div>
+            <Slider value={this.state.value1} onChange={this.handleOnChange}/>
+          </Paper>
+        </div>
       </div>
     );
   }
