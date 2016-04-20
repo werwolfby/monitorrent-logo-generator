@@ -8,8 +8,7 @@ import Paper from 'material-ui/lib/paper';
 import Slider from 'material-ui/lib/slider';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 import themeDecorator from 'material-ui/lib/styles/theme-decorator';
-import { Row, Col } from 'react-flexbox-grid/lib/index';
-
+import Content from './Content';
 
 const muiTheme = getMuiTheme({
   accent1Color: Colors.blueGrey500,
@@ -22,13 +21,12 @@ class Main extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this);
 
     this.state = {
-      value1: 0.3,
+      rotate: 0,
     };
   }
 
   handleOnChange(evt, value) {
-    console.log(evt);
-    this.setState(Object.assign({}, this.state, {value1: value}));
+    this.setState(Object.assign({}, this.state, {rotate: value}));
   }
 
   render() {
@@ -39,12 +37,12 @@ class Main extends React.Component {
           iconElementLeft={<div></div>}
         />
         <div className="container-content">
-          <Paper rounded={false} className="content" zDepth={1}>
-            <h1>Content</h1>
-          </Paper>
+          <div className="content">
+            <Content rotate={this.state.rotate}/>
+          </div>
           <Paper rounded={false} className="settings" zDepth={3}>
-            <div>Value 1</div>
-            <Slider value={this.state.value1} onChange={this.handleOnChange}/>
+            <div className="value">Rotate ({this.state.rotate})</div>
+            <Slider className="slider" min={0} max={360} step={1} value={this.state.rotate} onChange={this.handleOnChange}/>
           </Paper>
         </div>
       </div>

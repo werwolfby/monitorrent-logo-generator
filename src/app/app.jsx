@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import { Grid } from 'react-flexbox-grid/lib/index';
 import Main from './Main'; // Our custom react component
 
 //Needed for onTouchTap

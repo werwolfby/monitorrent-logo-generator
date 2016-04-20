@@ -36,10 +36,21 @@ body {
 
 .content {
   flex-grow: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .settings {
   flex-basis: 350px;
+}
+
+.settings .value {
+  text-align: center;
+}
+
+.settings .slider {
+  margin: 7px;
 }
 
 /* http://meyerweb.com/eric/tools/css/reset/
