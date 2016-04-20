@@ -29,6 +29,8 @@ class Main extends React.Component {
       'headThickness': 'Head Thickness',
       'headTop': 'Head Top',
       'headBottom': 'Head Bottom',
+      'headQdx': 'Head Q dx',
+      'headQdy': 'Head Q dy',
     };
     this.sliders = Object.keys(properties).map(k => {
       let value = properties[k];
@@ -64,6 +66,8 @@ class Main extends React.Component {
       headThickness: 0.11,
       headTop: 0.16,
       headBottom: 0.22,
+      headQdx: 0.5,
+      headQdy: 0.5,
     };
   }
 

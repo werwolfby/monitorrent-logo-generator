@@ -12,12 +12,17 @@ class Content extends React.Component {
         let rotate = `rotate(${this.props.rotate} ${this.props.cx * 192} ${this.props.cy * 192})`;
         let zcx = this.props.cx;
         let zcy = this.props.cy;
+        let headLength = this.props.headTop + this.props.headBottom;
+
+        let qx = zcx + this.props.right + this.props.headThickness + this.props.headQdx * headLength;
+        let qy = zcy - this.props.headTop + this.props.headQdy * headLength;
+
         let path = [
             'M', zcx - this.props.left, zcy - this.props.thickness / 2,
             'L', zcx + this.props.right, zcy - this.props.thickness / 2,
             'L', zcx + this.props.right, zcy - this.props.headTop,
             'L', zcx + this.props.right + this.props.headThickness, zcy - this.props.headTop,
-            'L', zcx + this.props.right + this.props.headThickness, zcy + this.props.headBottom,
+            'Q', qx, qy, zcx + this.props.right + this.props.headThickness, zcy + this.props.headBottom,
             'L', zcx + this.props.right, zcy + this.props.headBottom,
             'L', zcx + this.props.right, zcy + this.props.thickness / 2,
             'L', zcx - this.props.left, zcy + this.props.thickness / 2,
@@ -51,6 +56,8 @@ Content.propTypes = {
     headThickness: React.PropTypes.number,
     headTop: React.PropTypes.number,
     headBottom: React.PropTypes.number,
+    headQdx: React.PropTypes.number,
+    headQdy: React.PropTypes.number,
     size: React.PropTypes.number,
 };
 Content.defaultProps = {
@@ -63,6 +70,8 @@ Content.defaultProps = {
     headThickness: 0.04,
     headTop: 0.2,
     headBottom: 0.2,
+    headQdx: 0.5,
+    headQdy: 0.5,
     size: 320,
 };
 
