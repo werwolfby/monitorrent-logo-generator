@@ -6,6 +6,8 @@ import Colors from 'material-ui/lib/styles/colors';
 import FlatButton from 'material-ui/lib/flat-button';
 import Paper from 'material-ui/lib/paper';
 import Slider from 'material-ui/lib/slider';
+import Tabs from 'material-ui/lib/tabs/tabs';
+import Tab from 'material-ui/lib/tabs/tab';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 import themeDecorator from 'material-ui/lib/styles/theme-decorator';
 import Content from './Content';
@@ -73,7 +75,14 @@ class Main extends React.Component {
             <Content {...this.state.hammer} headType={0}/>
           </div>
           <Paper rounded={false} className="settings" style={{overflow: 'auto'}} zDepth={3}>
-            <Settings properties={this.hammerProperties} values={this.state.hammer} onChange={this.handleOnHammerChange}/>
+            <Tabs>
+              <Tab label="M">
+                <div>Here will be `M` settings</div>
+              </Tab>
+              <Tab label="T">
+                <Settings properties={this.hammerProperties} values={this.state.hammer} onChange={this.handleOnHammerChange}/>
+              </Tab>
+            </Tabs>
           </Paper>
         </div>
       </div>
