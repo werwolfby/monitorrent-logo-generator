@@ -22,20 +22,22 @@ class Main extends React.Component {
     this._mapSlider = this._mapSlider.bind(this);
     this._subHeader = this._subHeader.bind(this);
 
-    let shaftProperties = {
-      'rotate': {title: 'Rotate', min: -180, max: 180, step: 1},
-      'cx': 'Center X',
-      'cy': 'Center Y',
-      'thickness': {title: 'Thickness', min: 0.01, max: 0.2, step: 0.001},
-      'left': 'Left',
-      'right': 'Right',
-    };
-    let headProperties = {
-      'headThickness': {title: 'Head Thickness', min: 0.01, max: 0.2, step: 0.001},
-      'headTop': 'Head Top',
-      'headBottom': 'Head Bottom',
-      'headQdx': 'Head Q dx',
-      'headQdy': 'Head Q dy',
+    let properties = {
+      'Shaft': {
+          'rotate': {title: 'Rotate', min: -180, max: 180, step: 1},
+          'cx': 'Center X',
+          'cy': 'Center Y',
+          'thickness': {title: 'Thickness', min: 0.01, max: 0.2, step: 0.001},
+          'left': 'Left',
+          'right': 'Right',
+        },
+      'Head': {
+        'headThickness': {title: 'Thickness', min: 0.01, max: 0.2, step: 0.001},
+        'headTop': 'Top',
+        'headBottom': 'Bottom',
+        'headQdx': 'Q dx',
+        'headQdy': 'Q dy',
+      },
     };
     let createHandlers = (properties) => {
       return Object.keys(properties).map(k => {
@@ -62,8 +64,7 @@ class Main extends React.Component {
         };
       });
     };
-    this.shaftSliders = createHandlers(shaftProperties);
-    this.headSliders = createHandlers(headProperties);
+    this.sliders = Object.keys(properties).map(h => ({subheader: h, properties: createHandlers(properties[h])}));
 
     this.state = {
       rotate: -22,
@@ -106,19 +107,20 @@ class Main extends React.Component {
     const muiTheme = this.state.muiTheme;
     let themeVariables = muiTheme.appBar;
 
-    return (<div className="value" style={{backgroundColor: themeVariables.color, color: themeVariables.textColor, padding: 5}}>{name}</div>);
+    return (<div className="value" key={name} style={{backgroundColor: themeVariables.color, color: themeVariables.textColor, padding: 5}}>{name}</div>);
   }
 
   render() {
-    let shaftSliders = this.shaftSliders.map(this._mapSlider);
-    let headSliders = this.headSliders.map(this._mapSlider);
-
-    let sliders = [
-      this._subHeader("Shaft"),
-      ...shaftSliders,
-      this._subHeader("Head"),
-      ...headSliders,
-    ];
+    let sliders;
+    if (this.sliders.length > 1)
+    {
+      let mappedSliders = this.sliders.map(s => [this._subHeader(s.subheader), ...s.properties.map(this._mapSlider)]);
+      sliders = mappedSliders.reduce((p, s) => [...p, ...s], []);
+    }
+    else
+    {
+      sliders = this.sliders[0].properties.map(this._mapSlider);
+    }
 
     return (
       <div className="container">
