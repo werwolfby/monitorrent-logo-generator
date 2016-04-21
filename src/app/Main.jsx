@@ -82,7 +82,7 @@ class Main extends React.Component {
       return (
         <div key={s.prop}>
           <div className="value">{s.title} ({value})</div>
-          <Slider className="slider" name="rotate" min={s.min} max={s.max} step={s.step} value={value} onChange={s.handler}/>
+          <Slider className="slider" name="rotate" style={{marginTop: 7, marginBottom: 7}} min={s.min} max={s.max} step={s.step} value={value} onChange={s.handler}/>
         </div>
         );
       });
