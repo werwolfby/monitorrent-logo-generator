@@ -97,13 +97,10 @@ class Settings extends React.Component {
 
   render() {
     let sliders;
-    if (this.sliders.length > 1)
-    {
+    if (this.sliders.length > 1) {
       let mappedSliders = this.sliders.map(s => [this._subHeader(s.subheader), ...s.properties.map(this._mapSlider)]);
-      sliders = mappedSliders.reduce((p, s) => [...p, ...s], []);
-    }
-    else
-    {
+      sliders = Array.prototype.concat(...mappedSliders);
+    } else {
       sliders = this.sliders[0].properties.map(this._mapSlider);
     }
 
