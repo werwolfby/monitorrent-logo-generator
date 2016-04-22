@@ -74,7 +74,7 @@ class Main extends React.Component {
         />
         <div className="container-content">
           <div className="content">
-            <Content {...this.state.hammer}/>
+            <Content hammer={this.state.hammer}/>
           </div>
           <Paper rounded={false} className="settings" style={{overflow: 'auto'}} zDepth={3}>
             <Tabs>
