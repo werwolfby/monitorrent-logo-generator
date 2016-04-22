@@ -62,40 +62,34 @@ class Content extends React.Component {
 
     // Samson Post
     _getSupportPath(state) {
+        function getDeltaHeight(w, dw, h) {
+            return (h * (w + dw)/w) - h;
+        }
+
         let zcx = state.cx;
         let zcy = state.cy;
         let w = state.bottomWidth / 2;
         let dw = state.thickness / 2;
         let h = 1 - zcy - state.bottomSpacing;
-        let dh = (h * (w + dw)/w) - h;
+        let sw = state.topWidth / 2;
+        let bigDh = getDeltaHeight(w - sw, dw, h);
 
         return [
             'M', zcx - w - dw, 1 - state.bottomSpacing,
-            'L', zcx, zcy - dh,
+            'L', zcx - sw, zcy - bigDh,
+            'L', zcx, zcy - bigDh + sw,
+            'L', zcx + sw, zcy - bigDh,
             'L', zcx + w + dw, 1 - state.bottomSpacing,
             'L', zcx + w - dw, 1 - state.bottomSpacing,
-            'L', zcx, zcy + dh,
+            'L', zcx + sw, zcy + bigDh,
+            'L', zcx, zcy + bigDh + sw,
+            'L', zcx - sw, zcy + bigDh,
             'L', zcx - w + dw, 1 - state.bottomSpacing,
             'Z',
         ]
     }
 }
 
-Content.propTypes = {
-    rotate: React.PropTypes.number,
-    cx: React.PropTypes.number,
-    cy: React.PropTypes.number,
-    thickness: React.PropTypes.number,
-    left: React.PropTypes.number,
-    right: React.PropTypes.number,
-    headThickness: React.PropTypes.number,
-    headTop: React.PropTypes.number,
-    headBottom: React.PropTypes.number,
-    headQdx: React.PropTypes.number,
-    headQdy: React.PropTypes.number,
-    headType: React.PropTypes.number,
-    size: React.PropTypes.number,
-};
 Content.defaultProps = {
     size: 320,
     hammer: {
@@ -116,6 +110,7 @@ Content.defaultProps = {
         cx: 0.5,
         cy: 0.5,
         thickness: 0.06,
+        topWidth: 0.2,
         bottomWidth: 0.5,
         bottomSpacing: 0.02,
     },

@@ -47,7 +47,8 @@ class Main extends React.Component {
           'cx': 'Center X',
           'cy': 'Center Y',
           'thickness': {title: 'Thickness', min: 0.01, max: 0.2, step: 0.001},
-          'bottomWidth': {title: 'Bottom Width', min: 0.01, max: 0.5, step: 0.01},
+          'topWidth': 'Top Width',
+          'bottomWidth': 'Bottom Width',
           'bottomSpacing': {title: 'Bottom Spacing', min: 0.01, max: 0.2, step: 0.001},
       },
     }
@@ -72,6 +73,7 @@ class Main extends React.Component {
         cx: 0.5,
         cy: 0.5,
         thickness: 0.06,
+        topWidth: 0.2,
         bottomWidth: 0.5,
         bottomSpacing: 0.02,
       },
