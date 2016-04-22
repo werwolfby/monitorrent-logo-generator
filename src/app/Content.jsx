@@ -69,8 +69,9 @@ class Content extends React.Component {
         let zcx = state.cx;
         let zcy = state.cy;
         let w = state.bottomWidth / 2;
-        let dw = state.thickness / 2;
+        let dt = state.thickness / 2;
         let h = 1 - zcy - state.bottomSpacing;
+        let dw = (dt * Math.sqrt(w*w + h*h)) / h;
         let sw = state.topWidth / 2;
         let bigDh = getDeltaHeight(w - sw, dw, h);
 
