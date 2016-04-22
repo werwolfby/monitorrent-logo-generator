@@ -33,6 +33,7 @@ class Main extends React.Component {
           'right': 'Right',
         },
       'Head': {
+        'headType': {title: 'Type', values: [{title: 'Head 0', value: 0}, {title: 'Head 1', value: 1}]},
         'headThickness': {title: 'Thickness', min: 0.01, max: 0.2, step: 0.001},
         'headTop': 'Top',
         'headBottom': 'Bottom',
@@ -49,6 +50,7 @@ class Main extends React.Component {
         thickness: 0.06,
         left: 0.45,
         right: 0.35,
+        headType: 0,
         headThickness: 0.05,
         headTop: 0.16,
         headBottom: 0.22,
@@ -72,7 +74,7 @@ class Main extends React.Component {
         />
         <div className="container-content">
           <div className="content">
-            <Content {...this.state.hammer} headType={0}/>
+            <Content {...this.state.hammer}/>
           </div>
           <Paper rounded={false} className="settings" style={{overflow: 'auto'}} zDepth={3}>
             <Tabs>
