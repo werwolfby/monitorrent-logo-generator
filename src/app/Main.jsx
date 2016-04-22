@@ -22,6 +22,7 @@ class Main extends React.Component {
     super(props, context);
 
     this.handleOnHammerChange = this.handleOnHammerChange.bind(this);
+    this.handleOnSupportChange = this.handleOnSupportChange.bind(this);
 
     this.hammerProperties = {
       'Shaft': {
@@ -41,6 +42,15 @@ class Main extends React.Component {
         'headQdy': 'Q dy',
       },
     };
+    this.supportProperties = {
+      'Main': {
+          'cx': 'Center X',
+          'cy': 'Center Y',
+          'thickness': {title: 'Thickness', min: 0.01, max: 0.2, step: 0.001},
+          'bottomWidth': {title: 'Bottom Width', min: 0.01, max: 0.5, step: 0.01},
+          'bottomSpacing': {title: 'Bottom Spacing', min: 0.01, max: 0.2, step: 0.001},
+      },
+    }
 
     this.state = {
       hammer: {
@@ -58,11 +68,22 @@ class Main extends React.Component {
         headQdy: 0.18,
         muiTheme: context.muiTheme || getMuiTheme(),
       },
+      support: {
+        cx: 0.5,
+        cy: 0.5,
+        thickness: 0.06,
+        bottomWidth: 0.5,
+        bottomSpacing: 0.02,
+      },
     };
   }
 
   handleOnHammerChange(value) {
     this.setState({hammer: value});
+  }
+
+  handleOnSupportChange(value) {
+    this.setState({support: value});
   }
 
   render() {
@@ -74,12 +95,12 @@ class Main extends React.Component {
         />
         <div className="container-content">
           <div className="content">
-            <Content hammer={this.state.hammer}/>
+            <Content hammer={this.state.hammer} support={this.state.support}/>
           </div>
           <Paper rounded={false} className="settings" style={{overflow: 'auto'}} zDepth={3}>
             <Tabs>
               <Tab label="M">
-                <div>Here will be `M` settings</div>
+                <Settings properties={this.supportProperties} values={this.state.support} onChange={this.handleOnSupportChange}/>
               </Tab>
               <Tab label="T">
                 <Settings properties={this.hammerProperties} values={this.state.hammer} onChange={this.handleOnHammerChange}/>

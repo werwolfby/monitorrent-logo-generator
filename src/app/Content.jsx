@@ -10,24 +10,35 @@ class Content extends React.Component {
 
     render() {
         let rotate = `rotate(${this.props.hammer.rotate} ${this.props.hammer.cx * 192} ${this.props.hammer.cy * 192})`;
-        let path = this._getHammerPath(this.props.hammer);
-        for (let i = 0; i < path.length; i++) {
-            if (typeof path[i] === 'number') {
-                path[i] = path[i] * 192;
-            }
-        }
-        path = path.join(' ');
+
+        let hammerPath = this._getHammerPath(this.props.hammer);
+        this._scale(hammerPath);
+        hammerPath = hammerPath.join(' ');
+
+        let supportPath = this._getSupportPath(this.props.support);
+        this._scale(supportPath);
+        supportPath = supportPath.join(' ');
 
         return (
             <Paper style={{width: this.props.size, height: this.props.size}}>
                 <svg xmlns="http://www.w3.org/svg/2000"
                     viewBox={"0 0 192 192"} width={this.props.size} height={this.props.size}>
-                    <path d={path} transform={rotate} stroke="black" fill="none"/>
+                    <path d={hammerPath} transform={rotate} stroke="black" fill="none"/>
+                    <path d={supportPath} stroke="black" fill="none"/>
                 </svg>
             </Paper>
         );
     }
 
+    _scale(path) {
+        for (let i = 0; i < path.length; i++) {
+            if (typeof path[i] === 'number') {
+                path[i] = path[i] * 192;
+            }
+        }
+    }
+
+    // Walking Beam
     _getHammerPath(state) {
         let zcx = state.cx;
         let zcy = state.cy;
@@ -47,6 +58,26 @@ class Content extends React.Component {
             'L', zcx - state.left, zcy + state.thickness / 2,
             'Z',
         ];
+    }
+
+    // Samson Post
+    _getSupportPath(state) {
+        let zcx = state.cx;
+        let zcy = state.cy;
+        let w = state.bottomWidth / 2;
+        let dw = state.thickness / 2;
+        let h = 1 - zcy - state.bottomSpacing;
+        let dh = (h * (w + dw)/w) - h;
+
+        return [
+            'M', zcx - w - dw, 1 - state.bottomSpacing,
+            'L', zcx, zcy - dh,
+            'L', zcx + w + dw, 1 - state.bottomSpacing,
+            'L', zcx + w - dw, 1 - state.bottomSpacing,
+            'L', zcx, zcy + dh,
+            'L', zcx - w + dw, 1 - state.bottomSpacing,
+            'Z',
+        ]
     }
 }
 
@@ -71,7 +102,7 @@ Content.defaultProps = {
         rotate: 0,
         cx: 0.5,
         cy: 0.5,
-        thickness: 0.02,
+        thickness: 0.06,
         left: 0.45,
         right: 0.45,
         headThickness: 0.04,
@@ -80,6 +111,13 @@ Content.defaultProps = {
         headQdx: 0.5,
         headQdy: 0.5,
         headType: 0,
+    },
+    support: {
+        cx: 0.5,
+        cy: 0.5,
+        thickness: 0.06,
+        bottomWidth: 0.5,
+        bottomSpacing: 0.02,
     },
 };
 
