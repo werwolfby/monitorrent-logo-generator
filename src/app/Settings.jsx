@@ -57,15 +57,16 @@ class Settings extends React.Component {
     };
     this.sliders = Object.keys(properties).map(h => ({subheader: h, properties: createHandlers(properties[h])}));
 
-    this.state = Object.assign({}, props.values, {muiTheme: context.muiTheme || getMuiTheme()});
+    this.state = Object.assign({}, {values: props.values}, {muiTheme: context.muiTheme || getMuiTheme()});
   }
 
   handleOnChange(value, name) {
-    this.setState({[name]: value}, () => this._onChange(this.state));
+    let values = Object.assign({}, this.state.values, {[name]: value});
+    this.setState({values}, () => this._onChange(this.state.values));
   }
 
   _mapSlider(s) {
-    let value = this.state[s.prop];
+    let value = this.state.values[s.prop];
     let control = null;
     if (s.values) {
       let values = s.values.map(v => <MenuItem key={v.value} value={v.value} primaryText={v.title}/>)
@@ -80,9 +81,8 @@ class Settings extends React.Component {
     } else {
       return (
         <div key={s.prop}>
-            <div className="value">{s.title} ({value})</div>
-            <Slider className="slider" name="rotate" style={{marginTop: 7, marginBottom: 7}}
-                    min={s.min} max={s.max} step={s.step} value={value} onChange={s.handler}/>
+          <div className="value">{s.title} ({value})</div>
+          <Slider className="slider" name="rotate" style={{marginTop: 7, marginBottom: 7}} min={s.min} max={s.max} step={s.step} value={value} onChange={s.handler}/>
         </div>
       );
     }
