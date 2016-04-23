@@ -24,8 +24,8 @@ class Content extends React.Component {
             <Paper style={{width: this.props.size, height: this.props.size}}>
                 <svg xmlns="http://www.w3.org/svg/2000"
                     viewBox={"0 0 192 192"} width={this.props.size} height={this.props.size}>
-                    <path d={hammerPath} transform={rotate} stroke="black" fill="none"/>
-                    <path d={supportPath} stroke="black" fill="none"/>
+                    <path d={hammerPath} transform={rotate} stroke="black" fill="white"/>
+                    <path d={supportPath} stroke="black" fill="white"/>
                 </svg>
             </Paper>
         );
