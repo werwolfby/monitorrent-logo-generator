@@ -50,6 +50,7 @@ class Main extends React.Component {
           'topWidth': 'Top Width',
           'bottomWidth': 'Bottom Width',
           'bottomSpacing': {title: 'Bottom Spacing', min: 0.01, max: 0.2, step: 0.001},
+          'mode': {title: 'Mode', values: [{title: 'Lines', value: 0}, {title: 'Quadric', value: 1}]},
       },
     }
 
@@ -75,6 +76,7 @@ class Main extends React.Component {
       topWidth: 0.2,
       bottomWidth: 0.5,
       bottomSpacing: 0.02,
+      mode: 1,
     };
 
     let hashState = {hammer: {}, support: {}};

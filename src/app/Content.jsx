@@ -106,16 +106,34 @@ class Content extends React.Component {
         let p3m = l2m.intersect(l3m);
         let p4m = l3m.intersect(lb);
 
+        let modeP, modeM;
+
+        if (state.mode === 1) {
+            modeP = [
+                'Q', ...p2p.getCoords(), ...p3p.getCoords(),
+            ];
+            modeM = [
+                'Q', ...p2m.getCoords(), ...p1m.getCoords(),
+            ];
+        } else {
+            modeP = [
+                'L', ...p2p.getCoords(),
+                'L', ...p3p.getCoords(),
+            ];
+            modeM = [
+                'L', ...p2m.getCoords(),
+                'L', ...p1m.getCoords(),
+            ];
+        }
+
         return [
             'M', ...p0p.getCoords(),
             'L', ...p1p.getCoords(),
-            'L', ...p2p.getCoords(),
-            'L', ...p3p.getCoords(),
+            ...modeP,
             'L', ...p4p.getCoords(),
             'L', ...p4m.getCoords(),
             'L', ...p3m.getCoords(),
-            'L', ...p2m.getCoords(),
-            'L', ...p1m.getCoords(),
+            ...modeM,
             'L', ...p0m.getCoords(),
             'Z',
         ];
@@ -145,6 +163,7 @@ Content.defaultProps = {
         topWidth: 0.2,
         bottomWidth: 0.5,
         bottomSpacing: 0.02,
+        mode: 0,
     },
 };
 
