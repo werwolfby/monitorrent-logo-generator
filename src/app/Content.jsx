@@ -1,5 +1,6 @@
 import React from 'react';
 import Paper from 'material-ui/lib/paper';
+import { Point, Line } from "./Geometry";
 
 class Content extends React.Component {
     constructor(props, context) {
@@ -62,32 +63,62 @@ class Content extends React.Component {
 
     // Samson Post
     _getSupportPath(state) {
-        function getDeltaHeight(w, dw, h) {
-            return (h * (w + dw)/w) - h;
-        }
-
         let zcx = state.cx;
         let zcy = state.cy;
-        let w = state.bottomWidth / 2;
+        let wb = state.bottomWidth / 2;
+        let wt = state.topWidth / 2;
         let dt = state.thickness / 2;
-        let h = 1 - zcy - state.bottomSpacing;
-        let dw = (dt * Math.sqrt(w*w + h*h)) / h;
-        let sw = state.topWidth / 2;
-        let bigDh = getDeltaHeight(w - sw, dw, h);
+        let bottom = 1 - state.bottomSpacing;
+        let top = zcy;
+
+        let p0 = new Point(zcx - wb, bottom);
+        let p1 = new Point(zcx - wt, top);
+        let p2 = new Point(zcx, top + wt);
+        let p3 = new Point(zcx + wt, top);
+        let p4 = new Point(zcx + wb, bottom);
+
+        let l0 = new Line(p0, p1);
+        let l1 = new Line(p1, p2);
+        let l2 = new Line(p2, p3);
+        let l3 = new Line(p3, p4);
+
+        let lb = Line.horizontal(bottom);
+
+        let l0p = l0.shift(dt);
+        let l1p = l1.shift(dt);
+        let l2p = l2.shift(dt);
+        let l3p = l3.shift(dt);
+
+        let p0p = l0p.intersect(lb);
+        let p1p = l0p.intersect(l1p);
+        let p2p = l1p.intersect(l2p);
+        let p3p = l2p.intersect(l3p);
+        let p4p = l3p.intersect(lb);
+
+        let l0m = l0.shift(-dt);
+        let l1m = l1.shift(-dt);
+        let l2m = l2.shift(-dt);
+        let l3m = l3.shift(-dt);
+
+        let p0m = l0m.intersect(lb);
+        let p1m = l0m.intersect(l1m);
+        let p2m = l1m.intersect(l2m);
+        let p3m = l2m.intersect(l3m);
+        let p4m = l3m.intersect(lb);
 
         return [
-            'M', zcx - w - dw, 1 - state.bottomSpacing,
-            'L', zcx - sw, zcy - bigDh,
-            'L', zcx, zcy - bigDh + sw,
-            'L', zcx + sw, zcy - bigDh,
-            'L', zcx + w + dw, 1 - state.bottomSpacing,
-            'L', zcx + w - dw, 1 - state.bottomSpacing,
-            'L', zcx + sw, zcy + bigDh,
-            'L', zcx, zcy + bigDh + sw,
-            'L', zcx - sw, zcy + bigDh,
-            'L', zcx - w + dw, 1 - state.bottomSpacing,
+            'M', ...p0p.getCoords(),
+            'L', ...p1p.getCoords(),
+            'L', ...p2p.getCoords(),
+            'L', ...p3p.getCoords(),
+            'L', ...p4p.getCoords(),
+            'L', ...p4m.getCoords(),
+            'L', ...p3m.getCoords(),
+            'L', ...p2m.getCoords(),
+            'L', ...p1m.getCoords(),
+            'L', ...p0m.getCoords(),
             'Z',
-        ]
+        ];
     }
 }
 
