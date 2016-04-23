@@ -71,8 +71,8 @@ class Settings extends React.Component {
       let values = s.values.map(v => <MenuItem key={v.value} value={v.value} primaryText={v.title}/>)
 
       return (
-        <div key={s.prop}>
-          <SelectField style={{marginTop: 7, marginBottom: 7}} fullWidth={true} value={value} onChange={s.handler}>
+        <div key={s.prop} style={{margin: 7}}>
+          <SelectField fullWidth={true} value={value} onChange={s.handler}>
             {values}
           </SelectField>
         </div>
