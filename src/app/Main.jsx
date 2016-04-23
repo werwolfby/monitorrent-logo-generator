@@ -53,30 +53,39 @@ class Main extends React.Component {
       },
     }
 
+    let defaultHammer = {
+      rotate: -22,
+      cx: 0.47,
+      cy: 0.4,
+      thickness: 0.06,
+      left: 0.45,
+      right: 0.35,
+      headType: 0,
+      headThickness: 0.05,
+      headTop: 0.16,
+      headBottom: 0.22,
+      headQdx: 0.32,
+      headQdy: 0.18,
+    };
+
+    let defaultSupport = {
+      cx: 0.5,
+      cy: 0.5,
+      thickness: 0.06,
+      topWidth: 0.2,
+      bottomWidth: 0.5,
+      bottomSpacing: 0.02,
+    };
+
+    let hashState = {hammer: {}, support: {}};
+    if (window.location.hash) {
+      hashState = JSON.parse(window.location.hash.substr(1));
+    }
+
     this.state = {
-      hammer: {
-        rotate: -22,
-        cx: 0.47,
-        cy: 0.4,
-        thickness: 0.06,
-        left: 0.45,
-        right: 0.35,
-        headType: 0,
-        headThickness: 0.05,
-        headTop: 0.16,
-        headBottom: 0.22,
-        headQdx: 0.32,
-        headQdy: 0.18,
-        muiTheme: context.muiTheme || getMuiTheme(),
-      },
-      support: {
-        cx: 0.5,
-        cy: 0.5,
-        thickness: 0.06,
-        topWidth: 0.2,
-        bottomWidth: 0.5,
-        bottomSpacing: 0.02,
-      },
+      muiTheme: context.muiTheme || getMuiTheme(),
+      hammer: Object.assign({}, defaultHammer, hashState.hammer || {}),
+      support: Object.assign({}, defaultSupport, hashState.support || {}),
     };
   }
 
@@ -86,6 +95,15 @@ class Main extends React.Component {
 
   handleOnSupportChange(value) {
     this.setState({support: value});
+  }
+
+  setState(newState) {
+    super.setState(newState);
+    let settings = {
+      hammer: this.state.hammer,
+      support: this.state.support,
+    }
+    window.location.hash = JSON.stringify(settings);
   }
 
   render() {
