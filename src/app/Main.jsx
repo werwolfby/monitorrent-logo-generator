@@ -46,8 +46,10 @@ class Main extends React.Component {
       'Main': {
           'cx': 'Center X',
           'cy': 'Center Y',
-          'thickness': {title: 'Thickness', min: 0.01, max: 0.2, step: 0.001},
+          'topThickness': {title: 'Top Thickness', min: 0.01, max: 0.2, step: 0.001},
           'topWidth': 'Top Width',
+          'topHeight': 'Top Height',
+          'bottomThickness': {title: 'Bottom Thickness', min: 0.01, max: 0.2, step: 0.001},
           'bottomWidth': 'Bottom Width',
           'bottomSpacing': {title: 'Bottom Spacing', min: 0.01, max: 0.2, step: 0.001},
           'mode': {title: 'Mode', values: [{title: 'Lines', value: 0}, {title: 'Quadric', value: 1}]},
@@ -72,11 +74,13 @@ class Main extends React.Component {
     let defaultSupport = {
       cx: 0.5,
       cy: 0.5,
-      thickness: 0.06,
+      topThickness: 0.06,
       topWidth: 0.2,
+      topHeight: 0.1,
+      bottomThickness: 0.06,
       bottomWidth: 0.5,
       bottomSpacing: 0.02,
-      mode: 1,
+      mode: 0,
     };
 
     let hashState = {hammer: {}, support: {}};

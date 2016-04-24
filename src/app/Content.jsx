@@ -67,13 +67,15 @@ class Content extends React.Component {
         let zcy = state.cy;
         let wb = state.bottomWidth / 2;
         let wt = state.topWidth / 2;
-        let dt = state.thickness / 2;
+        let ht = state.topHeight / 2;
+        let dtt = state.topThickness / 2;
+        let dtb = state.bottomThickness / 2;
         let bottom = 1 - state.bottomSpacing;
         let top = zcy;
 
         let p0 = new Point(zcx - wb, bottom);
         let p1 = new Point(zcx - wt, top);
-        let p2 = new Point(zcx, top + wt);
+        let p2 = new Point(zcx, top + ht);
         let p3 = new Point(zcx + wt, top);
         let p4 = new Point(zcx + wb, bottom);
 
@@ -84,10 +86,10 @@ class Content extends React.Component {
 
         let lb = Line.horizontal(bottom);
 
-        let l0p = l0.shift(dt);
-        let l1p = l1.shift(dt);
-        let l2p = l2.shift(dt);
-        let l3p = l3.shift(dt);
+        let l0p = l0.shift(dtb);
+        let l1p = l1.shift(dtt);
+        let l2p = l2.shift(dtt);
+        let l3p = l3.shift(dtb);
 
         let p0p = l0p.intersect(lb);
         let p1p = l0p.intersect(l1p);
@@ -95,10 +97,10 @@ class Content extends React.Component {
         let p3p = l2p.intersect(l3p);
         let p4p = l3p.intersect(lb);
 
-        let l0m = l0.shift(-dt);
-        let l1m = l1.shift(-dt);
-        let l2m = l2.shift(-dt);
-        let l3m = l3.shift(-dt);
+        let l0m = l0.shift(-dtb);
+        let l1m = l1.shift(-dtt);
+        let l2m = l2.shift(-dtt);
+        let l3m = l3.shift(-dtb);
 
         let p0m = l0m.intersect(lb);
         let p1m = l0m.intersect(l1m);
@@ -141,8 +143,10 @@ Content.defaultProps = {
     support: {
         cx: 0.5,
         cy: 0.5,
-        thickness: 0.06,
+        topThickness: 0.06,
         topWidth: 0.2,
+        topHeight: 0.1,
+        bottomThickness: 0.06,
         bottomWidth: 0.5,
         bottomSpacing: 0.02,
         mode: 0,
