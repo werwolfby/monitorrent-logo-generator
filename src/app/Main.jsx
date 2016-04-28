@@ -56,6 +56,8 @@ class Main extends React.Component {
                 'bottomWidth': 'Bottom Width',
                 'bottomSpacing': { title: 'Bottom Spacing', min: 0.01, max: 0.2, step: 0.001 },
                 'mode': { title: 'Mode', values: [{ title: 'Lines', value: 0 }, { title: 'Quadric', value: 1 }] },
+                'quadricCx': { title: 'Quadric Center X', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] } },
+                'quadricCy': { title: 'Quadric Center Y', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] } },
             },
         }
 
@@ -86,6 +88,8 @@ class Main extends React.Component {
             bottomThickness: 0.06,
             bottomWidth: 0.5,
             bottomSpacing: 0.02,
+            quadricCx: 0.5,
+            quadricCy: 0.5,
             mode: 0,
         };
 

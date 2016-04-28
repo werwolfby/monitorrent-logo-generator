@@ -117,7 +117,7 @@ class Content extends React.Component {
         let zcy = state.cy;
         let wb = state.bottomWidth / 2;
         let wt = state.topWidth / 2;
-        let ht = state.topHeight / 2;
+        let ht = state.topHeight;
         let dtt = state.topThickness / 2;
         let dtb = state.bottomThickness / 2;
         let bottom = 1 - state.bottomSpacing;
@@ -158,16 +158,40 @@ class Content extends React.Component {
         let p3m = l2m.intersect(l3m);
         let p4m = l3m.intersect(lb);
 
+        let modeP, modeM;
+
+        if (state.mode === 0) {
+            modeP = [
+                'L', ...p2p.getCoords(),
+                'L', ...p3p.getCoords(),
+            ];
+            modeM = [
+                'L', ...p2m.getCoords(),
+                'L', ...p1m.getCoords(),
+            ];
+        } else {
+            let qc = new Point(zcx + state.quadricCx, zcy + state.quadricCy);
+            let radiusP = p3p.getLengthTo(qc);
+            let radiusM = p1m.getLengthTo(qc);
+
+            modeP = [
+                'A', radiusP, radiusP, 0, 0, 0,
+                ...p3p.getCoords(),
+            ];
+            modeM = [
+                'A', radiusM, radiusM, 0, 0, 1 / 192,
+                ...p1m.getCoords(),
+            ];
+        }
+
         return [
             'M', ...p0p.getCoords(),
             'L', ...p1p.getCoords(),
-            ...(state.mode === 1 ? ['Q'] : ['L']), ...p2p.getCoords(),
-            ...(state.mode === 1 ? [] : ['L']), ...p3p.getCoords(),
+            ...modeP,
             'L', ...p4p.getCoords(),
             'L', ...p4m.getCoords(),
             'L', ...p3m.getCoords(),
-            ...(state.mode === 1 ? ['Q'] : ['L']), ...p2m.getCoords(),
-            ...(state.mode === 1 ? [] : ['L']), ...p1m.getCoords(),
+            ...modeM,
             'L', ...p0m.getCoords(),
             'Z',
         ];
@@ -199,6 +223,8 @@ Content.defaultProps = {
         bottomThickness: 0.06,
         bottomWidth: 0.5,
         bottomSpacing: 0.02,
+        quadricCx: 0.5,
+        quadricCy: 0.5,
         mode: 0,
     },
 };
