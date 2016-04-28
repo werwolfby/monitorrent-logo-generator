@@ -1,6 +1,6 @@
 import React from 'react';
 import Paper from 'material-ui/lib/paper';
-import { Point, Line } from "./Geometry";
+import { Point, Circle, Line } from "./Geometry";
 
 class Content extends React.Component {
     constructor(props, context) {
@@ -17,15 +17,18 @@ class Content extends React.Component {
         hammerPath = hammerPath.join(' ');
 
         let supportPath = this._getSupportPath(this.props.support);
-        this._scale(supportPath);
-        supportPath = supportPath.join(' ');
+        this._scale(supportPath[0]);
+        this._scale(supportPath[1]);
+        let supportPath0 = supportPath[0].join(' ');
+        let supportPath1 = supportPath[1].join(' ');
 
         return (
             <Paper style={{width: this.props.size, height: this.props.size}}>
                 <svg xmlns="http://www.w3.org/svg/2000"
                     viewBox={"0 0 192 192"} width={this.props.size} height={this.props.size}>
                     <path d={hammerPath} transform={rotate} stroke="black" fill="white"/>
-                    <path d={supportPath} stroke="black" fill="white"/>
+                    <path d={supportPath0} stroke="black" fill="white"/>
+                    <path d={supportPath1} stroke="red" fill="none"/>
                 </svg>
             </Paper>
         );
@@ -111,6 +114,15 @@ class Content extends React.Component {
         ];
     }
 
+    _drawCircle(cx, cy, r) {
+        return [
+            'M', cx - r, cy,
+            'A', r, r, 0, 0, 0, cx + r, cy,
+            'M', cx + r, cy,
+            'A', r, r, 0, 0, 0, cx - r, cy,
+        ];
+    }
+
     // Samson Post
     _getSupportPath(state) {
         let zcx = state.cx;
@@ -158,7 +170,7 @@ class Content extends React.Component {
         let p3m = l2m.intersect(l3m);
         let p4m = l3m.intersect(lb);
 
-        let modeP, modeM;
+        let modeP, modeM, adorner = [];
 
         if (state.mode === 0) {
             modeP = [
@@ -171,20 +183,69 @@ class Content extends React.Component {
             ];
         } else {
             let qc = new Point(zcx + state.quadricCx, zcy + state.quadricCy);
-            let radiusP = p3p.getLengthTo(qc);
-            let radiusM = p1m.getLengthTo(qc);
+            let radiusP = state.quadricR;
+            let radiusM = radiusP + state.topThickness;
 
-            modeP = [
-                'A', radiusP, radiusP, 0, 0, 0,
-                ...p3p.getCoords(),
-            ];
-            modeM = [
-                'A', radiusM, radiusM, 0, 0, 1 / 192,
-                ...p1m.getCoords(),
+            let l0pi = l0p.intersect(new Circle(qc.x, qc.y, radiusP));
+            let l3pi = l3p.intersect(new Circle(qc.x, qc.y, radiusP));
+
+            if (l0pi.length > 0 && l3pi.length > 0) {
+                p1p = l0pi.sort((a, b) => b.y - a.y)[0];
+                p3p = l3pi.sort((a, b) => b.y - a.y)[0];
+
+                modeP = [
+                    'A', radiusP, radiusP, 0, 0, 0,
+                    ...p3p.getCoords(),
+                ];
+            } else {
+                modeP = [
+                    'L', ...p2p.getCoords(),
+                    'L', ...p3p.getCoords(),
+                ];
+            }
+
+            let l0mi = l0m.intersect(new Circle(qc.x, qc.y, radiusM));
+            let l3mi = l3m.intersect(new Circle(qc.x, qc.y, radiusM));
+
+            if (l0mi.length > 0 && l3mi.length > 0) {
+
+                p1m = l0mi.sort((a, b) => b.y - a.y)[0];
+                p3m = l3mi.sort((a, b) => b.y - a.y)[0];
+
+                modeM = [
+                    'A', radiusM, radiusM, 0, 0, 1 / 192,
+                    ...p1m.getCoords(),
+                ];
+            } else {
+                modeM = [
+                    'L', ...p2m.getCoords(),
+                    'L', ...p1m.getCoords(),
+                ];
+            }
+
+            let i00 = l0pi.length > 0 ? l0pi[0] : null;
+            let i01 = l0pi.length > 0 ? l0pi[1] : null;
+
+            let i30 = l3pi.length > 0 ? l3pi[0] : null;
+            let i31 = l3pi.length > 0 ? l3pi[1] : null;
+
+            let c00 = i00 ? this._drawCircle(i00.x, i00.y, 0.01) : [];
+            let c01 = i01 ? this._drawCircle(i01.x, i01.y, 0.01) : [];
+
+            let c30 = i30 ? this._drawCircle(i30.x, i30.y, 0.01) : [];
+            let c31 = i31 ? this._drawCircle(i31.x, i31.y, 0.01) : [];
+
+            adorner = [
+                ...this._drawCircle(qc.x, qc.y, radiusP),
+                ...this._drawCircle(qc.x, qc.y, radiusM),
+                ...c00,
+                ...c01,
+                ...c30,
+                ...c31,
             ];
         }
 
-        return [
+        const path = [
             'M', ...p0p.getCoords(),
             'L', ...p1p.getCoords(),
             ...modeP,
@@ -195,6 +256,8 @@ class Content extends React.Component {
             'L', ...p0m.getCoords(),
             'Z',
         ];
+
+        return [path, adorner];
     }
 }
 
