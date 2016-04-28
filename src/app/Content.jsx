@@ -253,6 +253,44 @@ class Content extends React.Component {
             'Z',
         ];
 
+        switch (adornerName) {
+            case 'cx':
+            case 'cy':
+                adorner = this._drawCircle(zcx, zcy, 0.01);
+                break;
+            case 'topWidth':
+                adorner = [
+                    'M', ...p1.getCoords(),
+                    'L', p1.x, p1.y - 0.05,
+                    'L', p3.x, p3.y - 0.05,
+                    'L', ...p3.getCoords(),
+                ];
+                break;
+            case 'topHeight':
+                adorner = [
+                    ...this._drawCircle(zcx, zcy, 0.01),
+                    'M', zcx, zcy + 0.01,
+                    'L', zcx, zcy + ht,
+                ];
+                break;
+            case 'bottomWidth':
+                adorner = [
+                    'M', ...p0.getCoords(),
+                    'L', p0.x, p0.y + state.bottomSpacing / 2,
+                    'L', p4.x, p4.y + state.bottomSpacing / 2,
+                    'L', ...p4.getCoords(),
+                ];
+                break;
+            case 'bottomSpacing':
+                adorner = [
+                    'M', ...p0.getCoords(),
+                    'L', p0.x, 1,
+                    'M', ...p4.getCoords(),
+                    'L', p4.x, 1,
+                ];
+                break;
+        }
+
         return [path, adorner];
     }
 }

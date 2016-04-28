@@ -89,7 +89,7 @@ class Settings extends React.Component {
 
         return Object.assign({
             title: value.title,
-            adorner: value.adorner || null,
+            adorner: value.adorner || prop,
             prop: prop,
             handler: (evt, value) => this.handleOnChange(value, prop),
         }, ext);
