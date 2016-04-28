@@ -68,7 +68,7 @@ class Settings extends React.Component {
         return Object.assign({
             title: value.title,
             prop: prop,
-            handler: (evt, value) => this.handleOnChange(value, k),
+            handler: (evt, value) => this.handleOnChange(value, prop),
         }, ext);
     }
 
