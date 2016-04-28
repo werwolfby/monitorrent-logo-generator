@@ -7,6 +7,13 @@ class Point {
     getCoords() {
         return [this.x, this.y];
     }
+
+    getLengthTo(p2) {
+        let x = p2.x - this.x;
+        let y = p2.y - this.y;
+
+        return Math.sqrt(x * x + y * y);
+    }
 }
 
 class Line {
