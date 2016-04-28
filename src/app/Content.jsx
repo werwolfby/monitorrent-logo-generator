@@ -51,15 +51,19 @@ class Content extends React.Component {
          * */
         let zcx = state.cx;
         let zcy = state.cy;
-        let headLength = state.headTop + state.headBottom;
+        let top2 = state.headType === 2 ? state.headTop2 : state.headTop;
+        let headLength = top2 + state.headBottom;
+
+        let thickness1 = state.headThickness;
+        let thickness2 = state.headType === 2 ? state.headThickness2 : thickness1;
 
         let p0 = new Point(zcx - state.left, zcy - state.thickness / 2);
         let p1 = new Point(zcx + state.right, zcy - state.thickness / 2);
         let p2 = new Point(zcx + state.right, zcy - state.headTop);
-        let p3 = new Point(zcx + state.right + state.headThickness, zcy - state.headTop);
-        let p4 = new Point(zcx + state.right + state.headThickness + state.headQdx * headLength,
-                           zcy - state.headTop + state.headQdy * headLength);
-        let p5 = new Point(zcx + state.right + state.headThickness, zcy + state.headBottom);
+        let p3 = new Point(zcx + state.right + thickness1, zcy - top2);
+        let p4 = new Point(zcx + state.right + thickness1 + state.headQdx * headLength,
+                           zcy - top2 + state.headQdy * headLength);
+        let p5 = new Point(zcx + state.right + thickness2, zcy + state.headBottom);
         let p6 = new Point(zcx + state.right, zcy + state.headBottom);
         let p7 = new Point(zcx + state.right, zcy + state.thickness / 2);
         let p8 = new Point(zcx - state.left, zcy + state.thickness / 2);
@@ -78,6 +82,7 @@ class Content extends React.Component {
 
         switch (state.headType) {
             case 0:
+            case 2:
                 head = [
                     'M', ...p1.getCoords(),
                     'L', ...p2.getCoords(),
