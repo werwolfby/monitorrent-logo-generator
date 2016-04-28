@@ -41,22 +41,38 @@ class Content extends React.Component {
 
     // Walking Beam
     _getHammerPath(state) {
+        /*             p2--p3
+         *              |    \
+         * p0 -------- p1    |
+         * |            |    p4
+         * p8 -------- p7    |
+         *              |    /
+         *             p6--p5
+         * */
         let zcx = state.cx;
         let zcy = state.cy;
         let headLength = state.headTop + state.headBottom;
 
-        let qx = zcx + state.right + state.headThickness + state.headQdx * headLength;
-        let qy = zcy - state.headTop + state.headQdy * headLength;
+        let p0 = new Point(zcx - state.left, zcy - state.thickness / 2);
+        let p1 = new Point(zcx + state.right, zcy - state.thickness / 2);
+        let p2 = new Point(zcx + state.right, zcy - state.headTop);
+        let p3 = new Point(zcx + state.right + state.headThickness, zcy - state.headTop);
+        let p4 = new Point(zcx + state.right + state.headThickness + state.headQdx * headLength,
+                           zcy - state.headTop + state.headQdy * headLength);
+        let p5 = new Point(zcx + state.right + state.headThickness, zcy + state.headBottom);
+        let p6 = new Point(zcx + state.right, zcy + state.headBottom);
+        let p7 = new Point(zcx + state.right, zcy + state.thickness / 2);
+        let p8 = new Point(zcx - state.left, zcy + state.thickness / 2);
 
         return [
-            'M', zcx - state.left, zcy - state.thickness / 2,
-            'L', zcx + state.right, zcy - state.thickness / 2,
-            ...(state.headType === 0 ? ['L', zcx + state.right, zcy - state.headTop] : []),
-            'L', zcx + state.right + state.headThickness, zcy - state.headTop,
-            'Q', qx, qy, zcx + state.right + state.headThickness, zcy + state.headBottom,
-            ...(state.headType === 0 ? ['L', zcx + state.right, zcy + state.headBottom]: []),
-            'L', zcx + state.right, zcy + state.thickness / 2,
-            'L', zcx - state.left, zcy + state.thickness / 2,
+            'M', ...p0.getCoords(),
+            'L', ...p1.getCoords(),
+            ...(state.headType === 0 ? ['L', ...p2.getCoords()] : []),
+            'L', ...p3.getCoords(),
+            'Q', ...p4.getCoords(), ...p5.getCoords(),
+            ...(state.headType === 0 ? ['L', ...p6.getCoords()]: []),
+            'L', ...p7.getCoords(),
+            'L', ...p8.getCoords(),
             'Z',
         ];
     }
