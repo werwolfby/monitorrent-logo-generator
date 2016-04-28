@@ -64,16 +64,39 @@ class Content extends React.Component {
         let p7 = new Point(zcx + state.right, zcy + state.thickness / 2);
         let p8 = new Point(zcx - state.left, zcy + state.thickness / 2);
 
-        return [
-            'M', ...p0.getCoords(),
-            'L', ...p1.getCoords(),
-            ...(state.headType === 0 ? ['L', ...p2.getCoords()] : []),
-            'L', ...p3.getCoords(),
-            'Q', ...p4.getCoords(), ...p5.getCoords(),
-            ...(state.headType === 0 ? ['L', ...p6.getCoords()]: []),
-            'L', ...p7.getCoords(),
+        let shaft = [
+            'M', ...p7.getCoords(),
             'L', ...p8.getCoords(),
-            'Z',
+            'L', ...p0.getCoords(),
+            'L', ...p1.getCoords(),
+        ]
+
+        let head = [];
+
+        switch (state.headType) {
+            case 0:
+                head = [
+                    'M', ...p1.getCoords(),
+                    'L', ...p2.getCoords(),
+                    'L', ...p3.getCoords(),
+                    'Q', ...p4.getCoords(), ...p5.getCoords(),
+                    'L', ...p6.getCoords(),
+                    'L', ...p7.getCoords(),
+                ];
+                break;
+            case 1:
+                head = [
+                    'M', ...p1.getCoords(),
+                    'L', ...p3.getCoords(),
+                    'Q', ...p4.getCoords(), ...p5.getCoords(),
+                    'L', ...p7.getCoords(),
+                ];
+                break;
+        }
+
+        return [
+            ...shaft,
+            ...head,
         ];
     }
 
