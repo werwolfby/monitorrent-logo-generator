@@ -12,11 +12,11 @@ class Content extends React.Component {
     render() {
         let rotate = `rotate(${this.props.hammer.rotate} ${this.props.hammer.cx * 192} ${this.props.hammer.cy * 192})`;
 
-        let hammerPath = this._getHammerPath(this.props.hammer);
+        let hammerPath = this._getHammerPath(this.props.hammer, this.props.adorner);
         this._scale(hammerPath);
         hammerPath = hammerPath.join(' ');
 
-        let supportPath = this._getSupportPath(this.props.support);
+        let supportPath = this._getSupportPath(this.props.support, this.props.adorner);
         this._scale(supportPath[0]);
         this._scale(supportPath[1]);
         let supportPath0 = supportPath[0].join(' ');
@@ -124,7 +124,7 @@ class Content extends React.Component {
     }
 
     // Samson Post
-    _getSupportPath(state) {
+    _getSupportPath(state, adornerName) {
         let zcx = state.cx;
         let zcy = state.cy;
         let wb = state.bottomWidth / 2;
@@ -223,26 +223,22 @@ class Content extends React.Component {
                 ];
             }
 
-            let i00 = l0pi.length > 0 ? l0pi[0] : null;
-            let i01 = l0pi.length > 0 ? l0pi[1] : null;
+            if (adornerName === 'quadric') {
+                let c00 = this._drawCircle(p1p.x, p1p.y, 0.01);
+                let c01 = this._drawCircle(p3p.x, p3p.y, 0.01);
 
-            let i30 = l3pi.length > 0 ? l3pi[0] : null;
-            let i31 = l3pi.length > 0 ? l3pi[1] : null;
+                let c30 = this._drawCircle(p1m.x, p1m.y, 0.01);
+                let c31 = this._drawCircle(p3m.x, p3m.y, 0.01);
 
-            let c00 = i00 ? this._drawCircle(i00.x, i00.y, 0.01) : [];
-            let c01 = i01 ? this._drawCircle(i01.x, i01.y, 0.01) : [];
-
-            let c30 = i30 ? this._drawCircle(i30.x, i30.y, 0.01) : [];
-            let c31 = i31 ? this._drawCircle(i31.x, i31.y, 0.01) : [];
-
-            adorner = [
-                ...this._drawCircle(qc.x, qc.y, radiusP),
-                ...this._drawCircle(qc.x, qc.y, radiusM),
-                ...c00,
-                ...c01,
-                ...c30,
-                ...c31,
-            ];
+                adorner = [
+                    ...this._drawCircle(qc.x, qc.y, radiusP),
+                    ...this._drawCircle(qc.x, qc.y, radiusM),
+                    ...c00,
+                    ...c01,
+                    ...c30,
+                    ...c31,
+                ];
+            }
         }
 
         const path = [

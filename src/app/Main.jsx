@@ -23,6 +23,7 @@ class Main extends React.Component {
 
         this.handleOnHammerChange = this.handleOnHammerChange.bind(this);
         this.handleOnSupportChange = this.handleOnSupportChange.bind(this);
+        this.handleOnAdornerChange = this.handleOnAdornerChange.bind(this);
 
         this.hammerProperties = {
             'Shaft': {
@@ -56,9 +57,9 @@ class Main extends React.Component {
                 'bottomWidth': 'Bottom Width',
                 'bottomSpacing': { title: 'Bottom Spacing', min: 0.01, max: 0.2, step: 0.001 },
                 'mode': { title: 'Mode', values: [{ title: 'Lines', value: 0 }, { title: 'Quadric', value: 1 }] },
-                'quadricCx': { title: 'Quadric Center dX', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] } },
-                'quadricCy': { title: 'Quadric Center dY', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] } },
-                'quadricR': { title: 'Quadric Radius', min: 0, max: 0.5, step: 0.001, validFor: { 'mode': [1] } },
+                'quadricCx': { title: 'Quadric Center dX', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
+                'quadricCy': { title: 'Quadric Center dY', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
+                'quadricR': { title: 'Quadric Radius', min: 0, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
             },
         }
 
@@ -104,6 +105,7 @@ class Main extends React.Component {
             muiTheme: context.muiTheme || getMuiTheme(),
             hammer: Object.assign({}, defaultHammer, hashState.hammer || {}),
             support: Object.assign({}, defaultSupport, hashState.support || {}),
+            adorner: null,
         };
     }
 
@@ -113,6 +115,10 @@ class Main extends React.Component {
 
     handleOnSupportChange(value) {
         this.setState({ support: value }, this._updateHash);
+    }
+
+    handleOnAdornerChange(adorner) {
+        this.setState({ adorner }, () => this.forceUpdate());
     }
 
     _updateHash() {
@@ -129,15 +135,15 @@ class Main extends React.Component {
                 <AppBar className="app-bar" title="MoniTorrent Logo Generator" iconElementLeft={<div></div>}/>
                 <div className="container-content">
                     <div className="content">
-                        <Content hammer={this.state.hammer} support={this.state.support}/>
+                        <Content hammer={this.state.hammer} support={this.state.support} adorner={this.state.adorner}/>
                     </div>
                     <Paper rounded={false} className="settings" style={{ overflow: 'auto' }} zDepth={3}>
                         <Tabs>
                             <Tab label="M">
-                                <Settings properties={this.supportProperties} values={this.state.support} onChange={this.handleOnSupportChange}/>
+                                <Settings properties={this.supportProperties} values={this.state.support} onValuesChange={this.handleOnSupportChange} onAdornerChange={this.handleOnAdornerChange}/>
                             </Tab>
                             <Tab label="T">
-                                <Settings properties={this.hammerProperties} values={this.state.hammer} onChange={this.handleOnHammerChange}/>
+                                <Settings properties={this.hammerProperties} values={this.state.hammer} onValuesChange={this.handleOnHammerChange} onAdornerChange={this.handleOnAdornerChange}/>
                             </Tab>
                         </Tabs>
                     </Paper>

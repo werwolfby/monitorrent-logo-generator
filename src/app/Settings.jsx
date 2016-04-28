@@ -16,9 +16,11 @@ class Settings extends React.Component {
         super(props, context);
 
         this.handleOnChange = this.handleOnChange.bind(this);
+        this.handleOnAdorner = this.setAdorner.bind(this);
         this._mapSlider = this._mapControl.bind(this);
         this._subHeader = this._subHeader.bind(this);
-        this._onChange = props.onChange;
+        this._onValuesChange = props.onValuesChange;
+        this._onAdornerChange = props.onAdornerChange;
 
         const properties = props.properties;
         const createHandlers = (properties) => {
@@ -31,7 +33,13 @@ class Settings extends React.Component {
 
     handleOnChange(value, name) {
         let values = Object.assign({}, this.state.values, { [name]: value });
-        this.setState({ values }, () => this._onChange(this.state.values));
+        this.setState({ values }, () => this._onValuesChange(this.state.values));
+    }
+
+    setAdorner(adorner) {
+        if (this._onAdornerChange) {
+            this._onAdornerChange(adorner);
+        }
     }
 
     _createPropertySettings(prop, value) {
@@ -81,6 +89,7 @@ class Settings extends React.Component {
 
         return Object.assign({
             title: value.title,
+            adorner: value.adorner || null,
             prop: prop,
             handler: (evt, value) => this.handleOnChange(value, prop),
         }, ext);
@@ -94,7 +103,7 @@ class Settings extends React.Component {
                 let values = s.values.map(v => <MenuItem key={v.value} value={v.value} primaryText={v.title}/>)
 
                 return (
-                    <div key={s.prop} style={{ margin: 7 }}>
+                    <div key={s.prop} onMouseEnter={() => this.setAdorner(s.adorner)} onMouseLeave={() => this.setAdorner(null)} style={{ margin: 7 }}>
                         <SelectField fullWidth={true} value={value} onChange={s.handler}>
                             {values}
                         </SelectField>
@@ -102,14 +111,14 @@ class Settings extends React.Component {
                 );
             case 'slider':
                 return (
-                    <div key={s.prop}>
+                    <div key={s.prop} onMouseEnter={() => this.setAdorner(s.adorner)} onMouseLeave={() => this.setAdorner(null)}>
                         <div className="value">{s.title} ({value}) </div>
                         <Slider className="slider" name="rotate" style={{ marginTop: 7, marginBottom: 7 }} min={s.min} max={s.max} step={s.step} value={value} onChange={s.handler}/>
                     </div>
                 );
             case 'checkbox':
                 return (
-                    <div key={s.prop}>
+                    <div key={s.prop} onMouseEnter={() => this.setAdorner(s.adorner)} onMouseLeave={() => this.setAdorner(null)}>
                         <Toggle style={{}} label={s.title} labelPosition="right" labelStyle={{textAlign: 'center', marginLeft: -18, marginRight: 18}}
                            toggled={value} onToggle={(evt, value) => s.handler(evt, value)}/>
                     </div>
