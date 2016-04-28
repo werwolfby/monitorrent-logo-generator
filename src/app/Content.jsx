@@ -69,7 +69,10 @@ class Content extends React.Component {
             'L', ...p8.getCoords(),
             'L', ...p0.getCoords(),
             'L', ...p1.getCoords(),
-        ]
+        ];
+        if (state.close) {
+            shaft.push('Z');
+        }
 
         let head = [];
 
@@ -92,6 +95,9 @@ class Content extends React.Component {
                     'L', ...p7.getCoords(),
                 ];
                 break;
+        }
+        if (state.close && head.length > 0) {
+            head.push('Z');
         }
 
         return [
