@@ -36,9 +36,9 @@ class Main extends React.Component {
             'Head': {
                 'headType': { title: 'Type', values: [{ title: 'Head 0', value: 0 }, { title: 'Head 1', value: 1 }, { title: 'Head 2', value: 2 }] },
                 'headThickness': { title: 'Thickness', min: 0.01, max: 0.2, step: 0.001 },
-                'headThickness2': { title: 'Thickness 2', min: 0.01, max: 0.2, step: 0.001 },
+                'headThickness2': { title: 'Thickness 2', min: 0.01, max: 0.2, step: 0.001, validFor: { 'headType': [2] } },
                 'headTop': { title: 'Top', max: 0.5, step: 0.01 },
-                'headTop2': { title: 'Top 2', max: 0.5, step: 0.01 },
+                'headTop2': { title: 'Top 2', max: 0.5, step: 0.01, validFor: { 'headType': [2] } },
                 'headBottom': 'Bottom',
                 'headQdx': 'Q dx',
                 'headQdy': 'Q dy',
