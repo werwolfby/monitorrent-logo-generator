@@ -75,6 +75,10 @@ class Settings extends React.Component {
             ext = createSlider(value);
         }
 
+        if (value.validFor) {
+            ext.validFor = value.validFor;
+        }
+
         return Object.assign({
             title: value.title,
             prop: prop,
@@ -121,12 +125,31 @@ class Settings extends React.Component {
     }
 
     render() {
-        let controls;
-        if (this.sliders.length > 1) {
-            let mappedControls = this.sliders.map(s => [this._subHeader(s.subheader), ...s.properties.map(prop => this._mapControl(prop))]);
-            controls = Array.prototype.concat(...mappedControls);
-        } else {
-            controls = this.sliders[0].properties.map(prop => this._mapControl(prop));
+        const getPropertis = (properties) => {
+            return properties
+                .filter(prop => {
+                    if (!prop.validFor) {
+                        return true;
+                    }
+
+                    const validProps = Object.keys(prop.validFor);
+                    for (let validProp = 0; validProp < validProps.length; validProp++) {
+                        const validValues = prop.validFor[validProps[validProp]];
+                        const value = this.state.values[validProps];
+                        if (validValues.indexOf(value) >= 0) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                })
+                .map(prop => this._mapControl(prop));
+        };
+
+        let mappedControls = this.sliders.map(s => [this._subHeader(s.subheader), ...getPropertis(s.properties)]);
+        let controls = Array.prototype.concat(...mappedControls);
+        if (this.sliders.length === 1) {
+            controls = controls.slice(1);
         }
 
         return (<div>{controls}</div>);
