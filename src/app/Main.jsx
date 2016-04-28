@@ -40,6 +40,7 @@ class Main extends React.Component {
                 'headBottom': 'Bottom',
                 'headQdx': 'Q dx',
                 'headQdy': 'Q dy',
+                'close': { title: 'Close', value: true },
             },
         };
         this.supportProperties = {
@@ -69,6 +70,7 @@ class Main extends React.Component {
             headBottom: 0.22,
             headQdx: 0.32,
             headQdy: 0.18,
+            close: false,
         };
 
         let defaultSupport = {
@@ -96,15 +98,14 @@ class Main extends React.Component {
     }
 
     handleOnHammerChange(value) {
-        this.setState({ hammer: value });
+        this.setState({ hammer: value }, this._updateHash);
     }
 
     handleOnSupportChange(value) {
-        this.setState({ support: value });
+        this.setState({ support: value }, this._updateHash);
     }
 
-    setState(newState) {
-        super.setState(newState);
+    _updateHash() {
         let settings = {
             hammer: this.state.hammer,
             support: this.state.support,

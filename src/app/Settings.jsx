@@ -8,6 +8,7 @@ import Paper from 'material-ui/lib/paper';
 import Slider from 'material-ui/lib/slider';
 import SelectField from 'material-ui/lib/select-field';
 import MenuItem from 'material-ui/lib/menus/menu-item';
+import Toggle from 'material-ui/lib/toggle';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 
 class Settings extends React.Component {
@@ -50,6 +51,12 @@ class Settings extends React.Component {
             };
         }
 
+        function createCheckbox(value) {
+            return {
+                type: 'checkbox',
+            };
+        }
+
         let ext = null;
 
         if (typeof value === 'string') {
@@ -60,6 +67,9 @@ class Settings extends React.Component {
 
         if (Array.isArray(value.values)) {
             ext = createSelect(value);
+        }
+        else if (typeof value.value === "boolean") {
+            ext = createCheckbox(value);
         }
         else {
             ext = createSlider(value);
@@ -91,6 +101,13 @@ class Settings extends React.Component {
                     <div key={s.prop}>
                         <div className="value">{s.title} ({value}) </div>
                         <Slider className="slider" name="rotate" style={{ marginTop: 7, marginBottom: 7 }} min={s.min} max={s.max} step={s.step} value={value} onChange={s.handler}/>
+                    </div>
+                );
+            case 'checkbox':
+                return (
+                    <div key={s.prop}>
+                        <Toggle style={{}} label={s.title} labelPosition="right" labelStyle={{textAlign: 'center', marginLeft: -18, marginRight: 18}}
+                           toggled={value} onToggle={(evt, value) => s.handler(evt, value)}/>
                     </div>
                 );
         }
