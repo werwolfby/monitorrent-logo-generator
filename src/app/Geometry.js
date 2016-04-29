@@ -14,6 +14,42 @@ class Point {
 
         return Math.sqrt(x * x + y * y);
     }
+
+    shift(v) {
+        const x = this.x + v.x;
+        const y = this.y + v.y;
+        return new Point(x, y);
+    }
+
+    mult(d) {
+        const x = this.x * d;
+        const y = this.y * d;
+        return new Point(x, y);
+    }
+
+    rotate(angle, center) {
+        let x = this.x;
+        let y = this.y;
+        if (center) {
+            x = x - center.x;
+            y = y - center.y;
+        }
+        const sin = Math.sin(Math.PI * angle / 180);
+        const cos = Math.cos(Math.PI * angle / 180);
+        let x0 = x * cos - y * sin;
+        let y0 = x * sin + y * cos;
+        if (center) {
+            x0 = x0 + center.x;
+            y0 = y0 + center.y;
+        }
+        return new Point(x0, y0);
+    }
+
+    static getMiddle(p0, p1) {
+        const x = (p0.x + p1.x) / 2;
+        const y = (p0.y + p1.y) / 2;
+        return new Point(x, y);
+    }
 }
 
 class Circle {
@@ -53,6 +89,10 @@ class Line {
 
     getPointByY(y) {
         return - (this.c + this.b * y) / this.a;
+    }
+
+    get norm() {
+        return new Point(this.a, this.b);
     }
 
     intersect (item) {

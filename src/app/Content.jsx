@@ -273,6 +273,28 @@ class Content extends React.Component {
                     'L', zcx, zcy + ht,
                 ];
                 break;
+            case 'bottomThickness': {
+                    const middle = Point.getMiddle(p0, p1);
+                    const adp = middle.shift(l0.norm.mult(-dtb));
+                    const adm = middle.shift(l0.norm.mult(+dtb));
+                    const ad0 = adp.shift(l0.norm.mult(-0.12));
+                    const ad1 = adm.shift(l0.norm.mult(+0.07));
+                    const arrow0p0 = l0.norm.rotate(+135).mult(0.03).shift(adp);
+                    const arrow0p1 = l0.norm.rotate(-135).mult(0.03).shift(adp);
+                    const arrow1p0 = l0.norm.rotate(+45).mult(0.03).shift(adm);
+                    const arrow1p1 = l0.norm.rotate(-45).mult(0.03).shift(adm);
+                    adorner = [
+                        'M', ...ad0.getCoords(),
+                        'L', ...ad1.getCoords(),
+                        'M', ...arrow0p0.getCoords(),
+                        'L', ...adp.getCoords(),
+                        'L', ...arrow0p1.getCoords(),
+                        'M', ...arrow1p0.getCoords(),
+                        'L', ...adm.getCoords(),
+                        'L', ...arrow1p1.getCoords(),
+                    ];
+                }
+                break;
             case 'bottomWidth':
                 adorner = [
                     'M', ...p0.getCoords(),
