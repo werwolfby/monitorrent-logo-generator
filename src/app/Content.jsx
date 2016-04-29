@@ -175,6 +175,9 @@ class Content extends React.Component {
                     'L', zcx + state.right, p1m.y,
                 ];
                 break;
+            case 'headType':
+                adorner = head;
+                break;
             case 'headThickness': {
                 let p2md = new Point(p2m.x, p2m.y + state.headTop);
                 adorner = [
