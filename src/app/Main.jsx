@@ -39,6 +39,11 @@ class Main extends React.Component {
                 'circle2': { title: 'Inner Hole', value: true },
                 'circle2Radius': { title: 'Radius', min: 0.01, max: s => s.circle1Radius - 0.001, step: 0.001, validFor: { 'circle2': [true] }, adorner: 'circle2' },
             },
+            'Bulb': {
+                'bulb': { title: 'Bulb', value: true },
+                'bulbThickness': { title: 'Thickness', min: 0.01, max: 0.2, step: 0.001, validFor: { 'bulb': [true] } },
+                'bulbWidth': { title: 'Width', min: 0.01, max: s => s.left, validFor: { 'bulb': [true] } },
+            },
             'Head': {
                 'headType': { title: 'Type', values: [{ title: 'Head 0', value: 0 }, { title: 'Head 1', value: 1 }, { title: 'Head 2', value: 2 }] },
                 'headThickness': { title: 'Thickness', min: 0.01, max: 0.2, step: 0.001 },
@@ -79,6 +84,9 @@ class Main extends React.Component {
             circle1Radius: 0.07,
             circle2: true,
             circle2Radius: 0.02,
+            bulb: false,
+            bulbThickness: 0.06,
+            bulbWidth: 0.07,
             headType: 0,
             headThickness: 0.05,
             headThickness2: 0.03,

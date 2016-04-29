@@ -63,11 +63,11 @@ class Content extends React.Component {
     // Walking Beam
     _getHammerPath(state, adornerName) {
         /*             p2 p2m p3
-         *              |       \
-         * p0 ---l0--- p1       |
-         * p0m         p1m      p4
-         * p8 ---l7--- p7       |
-         *              |       /
+         * b0-b1        |       \
+         *    p0-l0--- p1       |
+         *    p0m  z   p1m      p4
+         *    p8-l7--- p7       |
+         * b3-b2        |       /
          *             p6 p5m p5
          * */
         let zcx = state.cx;
@@ -78,7 +78,12 @@ class Content extends React.Component {
         let thickness1 = state.headThickness;
         let thickness2 = state.headType === 2 ? state.headThickness2 : thickness1;
 
-        let p0 = new Point(zcx - state.left, zcy - state.thickness / 2);
+        let bulbShift = 0;
+        if (state.bulb) {
+            bulbShift = state.bulbWidth;
+        }
+
+        let p0 = new Point(zcx - state.left + bulbShift, zcy - state.thickness / 2);
         let p1 = new Point(zcx + state.right, zcy - state.thickness / 2);
         let p2 = new Point(zcx + state.right, zcy - state.headTop);
         let p3 = new Point(zcx + state.right + thickness1, zcy - top2);
@@ -87,7 +92,12 @@ class Content extends React.Component {
         let p5 = new Point(zcx + state.right + thickness2, zcy + state.headBottom);
         let p6 = new Point(zcx + state.right, zcy + state.headBottom);
         let p7 = new Point(zcx + state.right, zcy + state.thickness / 2);
-        let p8 = new Point(zcx - state.left, zcy + state.thickness / 2);
+        let p8 = new Point(zcx - state.left + bulbShift, zcy + state.thickness / 2);
+
+        let b0 = new Point(zcx - state.left, zcy - state.bulbThickness / 2);
+        let b1 = new Point(p0.x, zcy - state.bulbThickness / 2);
+        let b2 = new Point(p0.x, zcy + state.bulbThickness / 2);
+        let b3 = new Point(zcx - state.left, zcy + state.bulbThickness / 2);
 
         let l0 = new Line(p0, p1);
         let l7 = new Line(p7, p8);
@@ -115,10 +125,21 @@ class Content extends React.Component {
             ];
         }
 
+        let bulb = [];
+        if (state.bulb) {
+            bulb = [
+                'L', ...b2.getCoords(),
+                'L', ...b3.getCoords(),
+                'L', ...b0.getCoords(),
+                'L', ...b1.getCoords(),
+            ];
+        }
+
         let shaft = [
             'M', ...p7.getCoords(),
             ...circle1Bottom,
             'L', ...p8.getCoords(),
+            ...bulb,
             'L', ...p0.getCoords(),
             ...circle1Top,
             'L', ...p1.getCoords(),
