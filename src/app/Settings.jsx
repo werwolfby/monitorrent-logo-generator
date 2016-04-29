@@ -26,7 +26,7 @@ class Settings extends React.Component {
         const createHandlers = (properties) => {
             return Object.keys(properties).map(prop => this._createPropertySettings(prop, properties[prop]));
         };
-        this.sliders = Object.keys(properties).map(h => ({ subheader: h, properties: createHandlers(properties[h]) }));
+        this.settings = Object.keys(properties).map(h => ({ subheader: h, properties: createHandlers(properties[h]) }));
 
         this.state = Object.assign({}, { values: props.values }, { muiTheme: context.muiTheme || getMuiTheme() });
     }
@@ -174,9 +174,9 @@ class Settings extends React.Component {
                 .map(prop => this._mapControl(prop));
         };
 
-        let mappedControls = this.sliders.map(s => [this._subHeader(s.subheader), ...getPropertis(s.properties)]);
+        let mappedControls = this.settings.map(s => [this._subHeader(s.subheader), ...getPropertis(s.properties)]);
         let controls = Array.prototype.concat(...mappedControls);
-        if (this.sliders.length === 1) {
+        if (this.settings.length === 1) {
             controls = controls.slice(1);
         }
 
