@@ -45,9 +45,11 @@ class Point {
         return new Point(x0, y0);
     }
 
-    static getMiddle(p0, p1) {
-        const x = (p0.x + p1.x) / 2;
-        const y = (p0.y + p1.y) / 2;
+    static getMiddle(p0, p1, scale = 0.5) {
+        const dx = p1.x - p0.x;
+        const dy = p1.y - p0.y;
+        const x = p0.x + dx * scale;
+        const y = p0.y + dy * scale;
         return new Point(x, y);
     }
 }
@@ -73,7 +75,7 @@ class Line {
         let b = p2.x - p1.x;
         let c = p1.x*p2.y - p2.x*p1.y;
 
-        let norm = Math.sqrt(a * a + b * b);
+        const norm = Math.sqrt(a * a + b * b);
         a = a / norm;
         b = b / norm;
         c = c / norm;

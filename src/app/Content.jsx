@@ -123,6 +123,31 @@ class Content extends React.Component {
         ];
     }
 
+    _drawHeight(p0, p1, thickness, scale = 0.5) {
+        const line = new Line(p0, p1);
+        const dtb = thickness / 2;
+
+        const middle = Point.getMiddle(p0, p1, scale);
+        const adp = middle.shift(line.norm.mult(-dtb));
+        const adm = middle.shift(line.norm.mult(+dtb));
+        const ad0 = adp.shift(line.norm.mult(-0.12));
+        const ad1 = adm.shift(line.norm.mult(+0.07));
+        const arrow0p0 = line.norm.rotate(+135).mult(0.03).shift(adp);
+        const arrow0p1 = line.norm.rotate(-135).mult(0.03).shift(adp);
+        const arrow1p0 = line.norm.rotate(+45).mult(0.03).shift(adm);
+        const arrow1p1 = line.norm.rotate(-45).mult(0.03).shift(adm);
+        return [
+            'M', ...ad0.getCoords(),
+            'L', ...ad1.getCoords(),
+            'M', ...arrow0p0.getCoords(),
+            'L', ...adp.getCoords(),
+            'L', ...arrow0p1.getCoords(),
+            'M', ...arrow1p0.getCoords(),
+            'L', ...adm.getCoords(),
+            'L', ...arrow1p1.getCoords(),
+        ];
+    }
+
     // Samson Post
     _getSupportPath(state, adornerName) {
         let zcx = state.cx;
@@ -273,27 +298,8 @@ class Content extends React.Component {
                     'L', zcx, zcy + ht,
                 ];
                 break;
-            case 'bottomThickness': {
-                    const middle = Point.getMiddle(p0, p1);
-                    const adp = middle.shift(l0.norm.mult(-dtb));
-                    const adm = middle.shift(l0.norm.mult(+dtb));
-                    const ad0 = adp.shift(l0.norm.mult(-0.12));
-                    const ad1 = adm.shift(l0.norm.mult(+0.07));
-                    const arrow0p0 = l0.norm.rotate(+135).mult(0.03).shift(adp);
-                    const arrow0p1 = l0.norm.rotate(-135).mult(0.03).shift(adp);
-                    const arrow1p0 = l0.norm.rotate(+45).mult(0.03).shift(adm);
-                    const arrow1p1 = l0.norm.rotate(-45).mult(0.03).shift(adm);
-                    adorner = [
-                        'M', ...ad0.getCoords(),
-                        'L', ...ad1.getCoords(),
-                        'M', ...arrow0p0.getCoords(),
-                        'L', ...adp.getCoords(),
-                        'L', ...arrow0p1.getCoords(),
-                        'M', ...arrow1p0.getCoords(),
-                        'L', ...adm.getCoords(),
-                        'L', ...arrow1p1.getCoords(),
-                    ];
-                }
+            case 'bottomThickness':
+                adorner = this._drawHeight(p0, p1, state.bottomThickness, 0.3);
                 break;
             case 'bottomWidth':
                 adorner = [
