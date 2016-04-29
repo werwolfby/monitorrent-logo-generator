@@ -283,6 +283,9 @@ class Content extends React.Component {
             case 'cy':
                 adorner = this._drawCircle(zcx, zcy, 0.01);
                 break;
+            case 'topThickness':
+                adorner = this._drawHeight(p1, p2, state.topThickness);
+                break;
             case 'topWidth':
                 adorner = [
                     'M', ...p1.getCoords(),
