@@ -12,23 +12,38 @@ class Content extends React.Component {
     render() {
         let rotate = `rotate(${this.props.hammer.rotate} ${this.props.hammer.cx * 192} ${this.props.hammer.cy * 192})`;
 
-        let hammerPath = this._getHammerPath(this.props.hammer, this.props.hammerAdorner);
+        let hammer = this._getHammerPath(this.props.hammer, this.props.hammerAdorner);
+
+        let hammerPath = hammer.path;
         this._scale(hammerPath);
         hammerPath = hammerPath.join(' ');
 
-        let supportPath = this._getSupportPath(this.props.support, this.props.supportAdorner);
-        this._scale(supportPath[0]);
-        this._scale(supportPath[1]);
-        let supportPath0 = supportPath[0].join(' ');
-        let supportPath1 = supportPath[1].join(' ');
+        let hammerAdorner = null;
+        if (hammer.adorner) {
+            this._scale(hammer.adorner);
+            hammerAdorner = (<path d={hammer.adorner.join(' ')} stroke="red" fill="none"/>);
+        }
+
+        let support = this._getSupportPath(this.props.support, this.props.supportAdorner);
+
+        let supportPath = support.path;
+        this._scale(supportPath);
+        supportPath = support.path.join(' ');
+
+        let supportAdorner = null;
+        if (support.adorner) {
+            this._scale(support.adorner);
+            supportAdorner = (<path d={support.adorner.join(' ')} stroke="red" fill="none"/>);
+        }
 
         return (
             <Paper style={{width: this.props.size, height: this.props.size}}>
                 <svg xmlns="http://www.w3.org/svg/2000"
                     viewBox={"0 0 192 192"} width={this.props.size} height={this.props.size}>
                     <path d={hammerPath} transform={rotate} stroke="black" fill="white"/>
-                    <path d={supportPath0} stroke="black" fill="white"/>
-                    <path d={supportPath1} stroke="red" fill="none"/>
+                    <path d={supportPath} stroke="black" fill="white"/>
+                    {hammerAdorner}
+                    {supportAdorner}
                 </svg>
             </Paper>
         );
@@ -108,10 +123,15 @@ class Content extends React.Component {
             head.push('Z');
         }
 
-        return [
+        let path = [
             ...shaft,
             ...head,
         ];
+
+        return {
+            path: path,
+            adorner: null,
+        };
     }
 
     _drawCircle(cx, cy, r) {
@@ -195,7 +215,7 @@ class Content extends React.Component {
         let p3m = l2m.intersect(l3m);
         let p4m = l3m.intersect(lb);
 
-        let modeP, modeM, adorner = [];
+        let modeP, modeM, adorner;
 
         if (state.mode === 0) {
             modeP = [
@@ -322,7 +342,7 @@ class Content extends React.Component {
                 break;
         }
 
-        return [path, adorner];
+        return {path, adorner};
     }
 }
 
