@@ -33,6 +33,25 @@ class Settings extends React.Component {
 
     handleOnChange(value, name) {
         let values = Object.assign({}, this.state.values, { [name]: value });
+        for (let i = 0; i < this.settings.length; i++) {
+            const properties = this.settings[i].properties;
+            for (let j = 0; j < properties.length; j++) {
+                const property = properties[j];
+                if (property.type !== 'slider') {
+                    continue;
+                }
+                const min = property.min(values);
+                const max = property.max(values);
+                let value = values[property.prop];
+                if (value < min) {
+                    value = min;
+                }
+                if (value > max) {
+                    value = max;
+                }
+                values[property.prop] = value;
+            }
+        }
         this.setState({ values }, () => this._onValuesChange(this.state.values));
     }
 
