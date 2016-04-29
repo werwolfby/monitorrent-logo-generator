@@ -87,6 +87,16 @@ class Settings extends React.Component {
             ext.validFor = value.validFor;
         }
 
+        if (typeof ext.min === 'number') {
+            let value = ext.min;
+            ext.min = () => value;
+        }
+
+        if (typeof ext.max === 'number') {
+            let value = ext.max;
+            ext.max = () => value;
+        }
+
         return Object.assign({
             title: value.title,
             adorner: value.adorner || prop,
@@ -109,13 +119,22 @@ class Settings extends React.Component {
                         </SelectField>
                     </div>
                 );
-            case 'slider':
+            case 'slider': {
+                let min = s.min(this.state.values);
+                let max = s.max(this.state.values);
+                if (value < min) {
+                    value = min;
+                }
+                if (value > max) {
+                    value = max;
+                }
                 return (
                     <div key={s.prop} onMouseEnter={() => this.setAdorner(s.adorner)} onMouseLeave={() => this.setAdorner(null)}>
                         <div className="value">{s.title} ({value}) </div>
-                        <Slider className="slider" name="rotate" style={{ marginTop: 7, marginBottom: 7 }} min={s.min} max={s.max} step={s.step} value={value} onChange={s.handler}/>
+                        <Slider className="slider" name="rotate" style={{ marginTop: 7, marginBottom: 7 }} min={min} max={max} step={s.step} value={value} onChange={s.handler}/>
                     </div>
                 );
+            }
             case 'checkbox':
                 return (
                     <div key={s.prop} onMouseEnter={() => this.setAdorner(s.adorner)} onMouseLeave={() => this.setAdorner(null)}>

@@ -35,9 +35,9 @@ class Main extends React.Component {
                 'left': 'Left',
                 'right': 'Right',
                 'circle1': { title: 'Outer Circle', value: true },
-                'circle1Radius': { title: 'Radius', min: 0.01, max: 0.5, step: 0.001, validFor: { 'circle1': [true] }, adorner: 'circle1' },
+                'circle1Radius': { title: 'Radius', min: s => s.thickness / 2 + 0.001, max: s => s.thickness * 2, step: 0.001, validFor: { 'circle1': [true] }, adorner: 'circle1' },
                 'circle2': { title: 'Inner Hole', value: true },
-                'circle2Radius': { title: 'Radius', min: 0.01, max: 0.2, step: 0.001, validFor: { 'circle2': [true] }, adorner: 'circle2' },
+                'circle2Radius': { title: 'Radius', min: 0.01, max: s => s.circle1Radius - 0.001, step: 0.001, validFor: { 'circle2': [true] }, adorner: 'circle2' },
             },
             'Head': {
                 'headType': { title: 'Type', values: [{ title: 'Head 0', value: 0 }, { title: 'Head 1', value: 1 }, { title: 'Head 2', value: 2 }] },
