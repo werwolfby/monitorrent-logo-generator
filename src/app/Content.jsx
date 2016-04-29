@@ -62,13 +62,13 @@ class Content extends React.Component {
 
     // Walking Beam
     _getHammerPath(state, adornerName) {
-        /*             p2 p2m p3
-         * b0-b1        |       \
-         *    p0-l0--- p1       |
-         *    p0m  z   p1m      p4
-         *    p8-l7--- p7       |
-         * b3-b2        |       /
-         *             p6 p5m p5
+        /*              p2 p2m p3
+         * b0--b1        |       \
+         *     p0-l0--- p1       |
+         * b0m p0m  z   p1m      p4
+         *     p8-l7--- p7       |
+         * b3--b2        |       /
+         *              p6 p5m p5
          * */
         let zcx = state.cx;
         let zcy = state.cy;
@@ -107,6 +107,9 @@ class Content extends React.Component {
         let p2m = Point.getMiddle(p2, p3);
         let p5m = Point.getMiddle(p6, p5);
 
+        let b0m = Point.getMiddle(b0, b3);
+
+
         let circle1Top = [], circle1Bottom = [];
 
         if (state.circle1 && state.circle1Radius > state.thickness / 2) {
@@ -125,9 +128,18 @@ class Content extends React.Component {
             ];
         }
 
-        let bulb = [];
-        if (state.bulb) {
-            bulb = [
+        let closeBulb = [], openBulb = [];
+
+        if (state.bulbClose) {
+            closeBulb = [
+                'M', ...b2.getCoords(),
+                'L', ...b3.getCoords(),
+                'L', ...b0.getCoords(),
+                'L', ...b1.getCoords(),
+                'Z',
+            ];
+        } else {
+            openBulb = [
                 'L', ...b2.getCoords(),
                 'L', ...b3.getCoords(),
                 'L', ...b0.getCoords(),
@@ -139,7 +151,9 @@ class Content extends React.Component {
             'M', ...p7.getCoords(),
             ...circle1Bottom,
             'L', ...p8.getCoords(),
-            ...bulb,
+            // when bulb is closed then it will be empty and do nothing
+            // otherwise it will continue draw bulb
+            ...openBulb,
             'L', ...p0.getCoords(),
             ...circle1Top,
             'L', ...p1.getCoords(),
@@ -182,6 +196,7 @@ class Content extends React.Component {
         }
 
         let path = [
+            ...closeBulb,
             ...shaft,
             ...head,
             ...circle2,
@@ -234,6 +249,33 @@ class Content extends React.Component {
                 break;
             case 'circle2':
                 adorner = this._drawCircle(zcx, zcy, state.circle2Radius);
+                break;
+            case 'bulb':
+                if (closeBulb.length > 0) {
+                    adorner = closeBulb;
+                } else {
+                    adorner = [
+                        'M', ...p8.getCoords(),
+                        ...openBulb,
+                        'L', ...p0.getCoords(),
+                    ];
+                }
+                break;
+            case 'bulbThickness':
+                adorner = this._drawHeight(b0m, p0m, state.bulbThickness);
+                break;
+            case 'bulbWidth':
+                adorner = [
+                    ...this._drawCircle(b0m.x, b0m.y, 0.01),
+                    'M', b0m.x + 0.01, b0m.y,
+                    'L', zcx - state.left + bulbShift, p1m.y,
+                ];
+                break;
+            case 'bulbClose':
+                adorner = [
+                    'M', ...p0.getCoords(),
+                    'L', ...p8.getCoords(),
+                ];
                 break;
             case 'headType':
                 adorner = head;

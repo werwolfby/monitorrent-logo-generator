@@ -43,6 +43,7 @@ class Main extends React.Component {
                 'bulb': { title: 'Bulb', value: true },
                 'bulbThickness': { title: 'Thickness', min: 0.01, max: 0.2, step: 0.001, validFor: { 'bulb': [true] } },
                 'bulbWidth': { title: 'Width', min: 0.01, max: s => s.left, validFor: { 'bulb': [true] } },
+                'bulbClose': { title: 'Close', value: true },
             },
             'Head': {
                 'headType': { title: 'Type', values: [{ title: 'Head 0', value: 0 }, { title: 'Head 1', value: 1 }, { title: 'Head 2', value: 2 }] },
