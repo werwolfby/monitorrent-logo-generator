@@ -12,11 +12,11 @@ class Content extends React.Component {
     render() {
         let rotate = `rotate(${this.props.hammer.rotate} ${this.props.hammer.cx * 192} ${this.props.hammer.cy * 192})`;
 
-        let hammerPath = this._getHammerPath(this.props.hammer, this.props.adorner);
+        let hammerPath = this._getHammerPath(this.props.hammer, this.props.hammerAdorner);
         this._scale(hammerPath);
         hammerPath = hammerPath.join(' ');
 
-        let supportPath = this._getSupportPath(this.props.support, this.props.adorner);
+        let supportPath = this._getSupportPath(this.props.support, this.props.supportAdorner);
         this._scale(supportPath[0]);
         this._scale(supportPath[1]);
         let supportPath0 = supportPath[0].join(' ');

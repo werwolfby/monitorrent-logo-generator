@@ -23,7 +23,8 @@ class Main extends React.Component {
 
         this.handleOnHammerChange = this.handleOnHammerChange.bind(this);
         this.handleOnSupportChange = this.handleOnSupportChange.bind(this);
-        this.handleOnAdornerChange = this.handleOnAdornerChange.bind(this);
+        this.handleOnSupportAdornerChange = this.handleOnSupportAdornerChange.bind(this);
+        this.handleOnHammerAdornerChange = this.handleOnHammerAdornerChange.bind(this);
 
         this.hammerProperties = {
             'Shaft': {
@@ -117,8 +118,12 @@ class Main extends React.Component {
         this.setState({ support: value }, this._updateHash);
     }
 
-    handleOnAdornerChange(adorner) {
-        this.setState({ adorner }, () => this.forceUpdate());
+    handleOnSupportAdornerChange(adorner) {
+        this.setState({ supportAdorner: adorner });
+    }
+
+    handleOnHammerAdornerChange(adorner) {
+        this.setState({ hammerAdorner: adorner });
     }
 
     _updateHash() {
@@ -135,15 +140,15 @@ class Main extends React.Component {
                 <AppBar className="app-bar" title="MoniTorrent Logo Generator" iconElementLeft={<div></div>}/>
                 <div className="container-content">
                     <div className="content">
-                        <Content hammer={this.state.hammer} support={this.state.support} adorner={this.state.adorner}/>
+                        <Content hammer={this.state.hammer} support={this.state.support} supportAdorner={this.state.supportAdorner} hammerAdorner={this.state.hammerAdorner}/>
                     </div>
                     <Paper rounded={false} className="settings" style={{ overflow: 'auto' }} zDepth={3}>
                         <Tabs>
                             <Tab label="M">
-                                <Settings properties={this.supportProperties} values={this.state.support} onValuesChange={this.handleOnSupportChange} onAdornerChange={this.handleOnAdornerChange}/>
+                                <Settings properties={this.supportProperties} values={this.state.support} onValuesChange={this.handleOnSupportChange} onAdornerChange={this.handleOnSupportAdornerChange}/>
                             </Tab>
                             <Tab label="T">
-                                <Settings properties={this.hammerProperties} values={this.state.hammer} onValuesChange={this.handleOnHammerChange} onAdornerChange={this.handleOnAdornerChange}/>
+                                <Settings properties={this.hammerProperties} values={this.state.hammer} onValuesChange={this.handleOnHammerChange} onAdornerChange={this.handleOnHammerAdornerChange}/>
                             </Tab>
                         </Tabs>
                     </Paper>
