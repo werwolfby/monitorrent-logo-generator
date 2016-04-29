@@ -59,13 +59,13 @@ class Content extends React.Component {
 
     // Walking Beam
     _getHammerPath(state, adornerName) {
-        /*             p2--p3
-         *              |    \
-         * p0 -------- p1    |
-         * p0m         p1m   p4
-         * p8 -------- p7    |
-         *              |    /
-         *             p6--p5
+        /*             p2 p2m p3
+         *              |       \
+         * p0 -------- p1       |
+         * p0m         p1m      p4
+         * p8 -------- p7       |
+         *              |       /
+         *             p6 p5m p5
          * */
         let zcx = state.cx;
         let zcy = state.cy;
@@ -88,6 +88,8 @@ class Content extends React.Component {
 
         let p0m = Point.getMiddle(p0, p8);
         let p1m = Point.getMiddle(p1, p7);
+        let p2m = Point.getMiddle(p2, p3);
+        let p5m = Point.getMiddle(p6, p5);
 
         let shaft = [
             'M', ...p7.getCoords(),
@@ -134,7 +136,7 @@ class Content extends React.Component {
         let adorner;
 
         switch (adornerName) {
-            case 'rotate':
+            case 'rotate': {
                 let center = new Point(zcx, zcy);
                 let rayStart = new Point(0.01, 0).rotate(-state.rotate).shift(center);
                 let rayEnd = new Point(1, 0).rotate(-state.rotate).mult(state.right).shift(center);
@@ -151,6 +153,7 @@ class Content extends React.Component {
                     'A', arcRadius, arcRadius, 0, 0, state.rotate > 0 ? 1 / 192 : 0, ...arcEnd.getCoords(),
                 ];
                 break;
+            }
             case 'cx':
             case 'cy':
                 adorner = this._drawCircle(zcx, zcy, 0.01);
@@ -172,6 +175,71 @@ class Content extends React.Component {
                     'L', zcx + state.right, p1m.y,
                 ];
                 break;
+            case 'headThickness': {
+                let p2md = new Point(p2m.x, p2m.y + state.headTop);
+                adorner = [
+                    ...this._drawHeight(p2md, p2m, state.headThickness, 1),
+                    'M', p1.x, p3.y,
+                    'L', ...p1.getCoords(),
+                    'M', ...p3.getCoords(),
+                    'L', p3.x, p1.y,
+                ];
+                break;
+            }
+            case 'headThickness2': {
+                let p5md = new Point(p5m.x, p5m.y - state.headBottom + state.thickness / 2);
+                adorner = [
+                    ...this._drawHeight(p5md, p5m, state.headThickness2),
+                    'M', p7.x, p5.y,
+                    'L', ...p7.getCoords(),
+                    'M', ...p5.getCoords(),
+                    'L', p5.x, p7.y,
+                ];
+                break;
+            }
+            case 'headTop': {
+                let pend = state.headType === 1 ? p3 : p2;
+                adorner = [
+                    ...this._drawCircle(p2m.x, p1m.y, 0.01),
+                    'M', p2m.x, p1m.y - 0.01,
+                    'L', p2m.x, pend.y,
+                    'L', ...pend.getCoords(),
+                ];
+                break;
+            }
+            case 'headTop2':
+                adorner = [
+                    ...this._drawCircle(p2m.x, p1m.y, 0.01),
+                    'M', p2m.x, p1m.y - 0.01,
+                    'L', p2m.x, p3.y,
+                    'L', ...p3.getCoords(),
+                ];
+                break;
+            case 'headBottom': {
+                let pend = state.headType === 1 ? p5 : p6;
+                adorner = [
+                    ...this._drawCircle(p5m.x, p1m.y, 0.01),
+                    'M', p5m.x, p1m.y + 0.01,
+                    'L', p5m.x, pend.y,
+                    'L', ...pend.getCoords(),
+                ];
+                break;
+            }
+            case 'headQuadric': {
+                adorner = [
+                    'M', ...p3.getCoords(),
+                    'L', ...p4.getCoords(),
+                    'L', ...p5.getCoords(),
+                ];
+                break;
+            }
+            case 'close': {
+                adorner = [
+                    'M', ...p1.getCoords(),
+                    'L', ...p7.getCoords(),
+                ];
+                break;
+            }
         }
 
         return { path, adorner };

@@ -42,8 +42,8 @@ class Main extends React.Component {
                 'headTop': { title: 'Top', max: 0.5, step: 0.01 },
                 'headTop2': { title: 'Top 2', max: 0.5, step: 0.01, validFor: { 'headType': [2] } },
                 'headBottom': 'Bottom',
-                'headQdx': 'Q dx',
-                'headQdy': 'Q dy',
+                'headQdx': { title: 'Q dx', adorner: 'headQuadric' },
+                'headQdy': { title: 'Q dy', adorner: 'headQuadric' },
                 'close': { title: 'Close', value: true },
             },
         };
