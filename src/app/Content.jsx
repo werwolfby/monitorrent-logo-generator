@@ -36,12 +36,15 @@ class Content extends React.Component {
             supportAdorner = (<path d={support.adorner.join(' ')} stroke="red" fill="none"/>);
         }
 
+        let hammerSvg = (<path d={hammerPath} transform={rotate} stroke="black" fill="white"/>);
+        let supportSvg = (<path d={supportPath} stroke="black" fill="white"/>);
+
         return (
             <Paper style={{width: this.props.size, height: this.props.size}}>
                 <svg xmlns="http://www.w3.org/svg/2000"
                     viewBox={"0 0 192 192"} width={this.props.size} height={this.props.size}>
-                    <path d={hammerPath} transform={rotate} stroke="black" fill="white"/>
-                    <path d={supportPath} stroke="black" fill="white"/>
+                    {hammerSvg}
+                    {supportSvg}
                     {hammerAdorner}
                     {supportAdorner}
                 </svg>
@@ -61,9 +64,9 @@ class Content extends React.Component {
     _getHammerPath(state, adornerName) {
         /*             p2 p2m p3
          *              |       \
-         * p0 -------- p1       |
+         * p0 ---l0--- p1       |
          * p0m         p1m      p4
-         * p8 -------- p7       |
+         * p8 ---l7--- p7       |
          *              |       /
          *             p6 p5m p5
          * */
@@ -86,15 +89,38 @@ class Content extends React.Component {
         let p7 = new Point(zcx + state.right, zcy + state.thickness / 2);
         let p8 = new Point(zcx - state.left, zcy + state.thickness / 2);
 
+        let l0 = new Line(p0, p1);
+        let l7 = new Line(p7, p8);
+
         let p0m = Point.getMiddle(p0, p8);
         let p1m = Point.getMiddle(p1, p7);
         let p2m = Point.getMiddle(p2, p3);
         let p5m = Point.getMiddle(p6, p5);
 
+        let circle1Top = [], circle1Bottom = [];
+
+        if (state.circle1 && state.circle1Radius > state.thickness / 2) {
+            let circle = new Circle(zcx, zcy, state.circle1Radius);
+
+            let iTop = l0.intersect(circle).sort((a, b) => a.x - b.x);
+            circle1Top = [
+                'L', ...iTop[0].getCoords(),
+                'A', state.circle1Radius, state.circle1Radius, 0, 0, 1 / 192, ...iTop[1].getCoords(),
+            ];
+
+            let iBottom = l7.intersect(circle).sort((a, b) => b.x - a.x);
+            circle1Bottom = [
+                'L', ...iBottom[0].getCoords(),
+                'A', state.circle1Radius, state.circle1Radius, 0, 0, 1 / 192, ...iBottom[1].getCoords(),
+            ];
+        }
+
         let shaft = [
             'M', ...p7.getCoords(),
+            ...circle1Bottom,
             'L', ...p8.getCoords(),
             'L', ...p0.getCoords(),
+            ...circle1Top,
             'L', ...p1.getCoords(),
         ];
         if (state.close) {
@@ -128,9 +154,16 @@ class Content extends React.Component {
             head.push('Z');
         }
 
+        let circle2 = [];
+
+        if (state.circle2) {
+            circle2 = this._drawCircle(zcx, zcy, state.circle2Radius);
+        }
+
         let path = [
             ...shaft,
             ...head,
+            ...circle2,
         ];
 
         let adorner;
@@ -159,7 +192,7 @@ class Content extends React.Component {
                 adorner = this._drawCircle(zcx, zcy, 0.01);
                 break;
             case 'thickness':
-                adorner = this._drawHeight(p0m, p1m, state.thickness, state.left / (state.left + state.right));
+                adorner = this._drawHeight(p0m, p1m, state.thickness, (state.left / 2) / (state.left + state.right));
                 break;
             case 'left':
                 adorner = [
@@ -174,6 +207,12 @@ class Content extends React.Component {
                     'M', zcx + 0.01, p1m.y,
                     'L', zcx + state.right, p1m.y,
                 ];
+                break;
+            case 'circle1':
+                adorner = this._drawCircle(zcx, zcy, state.circle1Radius);
+                break;
+            case 'circle2':
+                adorner = this._drawCircle(zcx, zcy, state.circle2Radius);
                 break;
             case 'headType':
                 adorner = head;
