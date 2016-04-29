@@ -21,7 +21,7 @@ class Content extends React.Component {
         let hammerAdorner = null;
         if (hammer.adorner) {
             this._scale(hammer.adorner);
-            hammerAdorner = (<path d={hammer.adorner.join(' ')} stroke="red" fill="none"/>);
+            hammerAdorner = (<path d={hammer.adorner.join(' ')} transform={rotate} stroke="red" fill="none"/>);
         }
 
         let support = this._getSupportPath(this.props.support, this.props.supportAdorner);
@@ -58,11 +58,11 @@ class Content extends React.Component {
     }
 
     // Walking Beam
-    _getHammerPath(state) {
+    _getHammerPath(state, adornerName) {
         /*             p2--p3
          *              |    \
          * p0 -------- p1    |
-         * |            |    p4
+         * p0m         p1m   p4
          * p8 -------- p7    |
          *              |    /
          *             p6--p5
@@ -85,6 +85,9 @@ class Content extends React.Component {
         let p6 = new Point(zcx + state.right, zcy + state.headBottom);
         let p7 = new Point(zcx + state.right, zcy + state.thickness / 2);
         let p8 = new Point(zcx - state.left, zcy + state.thickness / 2);
+
+        let p0m = Point.getMiddle(p0, p8);
+        let p1m = Point.getMiddle(p1, p7);
 
         let shaft = [
             'M', ...p7.getCoords(),
@@ -128,10 +131,50 @@ class Content extends React.Component {
             ...head,
         ];
 
-        return {
-            path: path,
-            adorner: null,
-        };
+        let adorner;
+
+        switch (adornerName) {
+            case 'rotate':
+                let center = new Point(zcx, zcy);
+                let rayStart = new Point(0.01, 0).rotate(-state.rotate).shift(center);
+                let rayEnd = new Point(1, 0).rotate(-state.rotate).mult(state.right).shift(center);
+                let arcRadius = state.right * 0.5;
+                let arcStart = new Point(arcRadius, 0).rotate(-state.rotate).shift(center);
+                let arcEnd = new Point(arcRadius, 0).shift(center);
+                adorner = [
+                    ...this._drawCircle(zcx, zcy, 0.01),
+                    'M', zcx + 0.01, zcy,
+                    'L', zcx + state.right, p1m.y,
+                    'M', ...rayStart.getCoords(),
+                    'L', ...rayEnd.getCoords(),
+                    'M', ...arcStart.getCoords(),
+                    'A', arcRadius, arcRadius, 0, 0, state.rotate > 0 ? 1 / 192 : 0, ...arcEnd.getCoords(),
+                ];
+                break;
+            case 'cx':
+            case 'cy':
+                adorner = this._drawCircle(zcx, zcy, 0.01);
+                break;
+            case 'thickness':
+                adorner = this._drawHeight(p0m, p1m, state.thickness, state.left / (state.left + state.right));
+                break;
+            case 'left':
+                adorner = [
+                    ...this._drawCircle(zcx, zcy, 0.01),
+                    'M', zcx - 0.01, p1m.y,
+                    'L', zcx - state.left, p1m.y,
+                ];
+                break;
+            case 'right':
+                adorner = [
+                    ...this._drawCircle(zcx, zcy, 0.01),
+                    'M', zcx + 0.01, p1m.y,
+                    'L', zcx + state.right, p1m.y,
+                ];
+                break;
+        }
+
+        return { path, adorner };
     }
 
     _drawCircle(cx, cy, r) {
