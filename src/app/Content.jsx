@@ -386,6 +386,28 @@ class Content extends React.Component {
 
     // Samson Post
     _getSupportPath(state, adornerName) {
+        /*
+         *                    pcp
+         *                pc(zcx,zcy)
+         *                     ..
+         *                    .cm.
+         *                   .    .
+         *                  .      .
+         *                 .        .
+         *                .          .
+         *         pc1p p1p          p3p pc3p
+         *              p1 pc1m  pc3m p3
+         *             /1m\          /3m\
+         *            /    \        /    \
+         *           / l1m l1 1p2p l2 l2m\
+         *          /        \    /        \
+         *    l0p l0 l0m      \2p/     l3m l3 l3p
+         *        /            p2            \
+         *       /             2m             \
+         *      /                              \
+         * p0p p0 p0m                       p4p p4 p4m
+         *
+         */
         let zcx = state.cx;
         let zcy = state.cy;
         let wb = state.bottomWidth / 2;
@@ -396,11 +418,18 @@ class Content extends React.Component {
         let bottom = 1 - state.bottomSpacing;
         let top = zcy;
 
+        let pc = new Point(zcx, zcy);
         let p0 = new Point(zcx - wb, bottom);
         let p1 = new Point(zcx - wt, top);
         let p2 = new Point(zcx, top + ht);
         let p3 = new Point(zcx + wt, top);
         let p4 = new Point(zcx + wb, bottom);
+
+        if (state.extended) {
+            p1 = Point.getMiddle(p0, pc, state.extendedLength);
+            p2 = new Point(p2.x, p2.y + (p1.y - pc.y));
+            p3 = Point.getMiddle(p4, pc, state.extendedLength);
+        }
 
         let l0 = new Line(p0, p1);
         let l1 = new Line(p1, p2);
@@ -419,6 +448,9 @@ class Content extends React.Component {
         let p2p = l1p.intersect(l2p);
         let p3p = l2p.intersect(l3p);
         let p4p = l3p.intersect(lb);
+        let pcp = l0p.intersect(l3p);
+        let pc1p = p1p;
+        let pc3p = p3p;
 
         let l0m = l0.shift(-dtb);
         let l1m = l1.shift(-dtt);
@@ -430,6 +462,9 @@ class Content extends React.Component {
         let p2m = l1m.intersect(l2m);
         let p3m = l2m.intersect(l3m);
         let p4m = l3m.intersect(lb);
+        let pcm = l0m.intersect(l3m);
+        let pc1m = l1p.intersect(l0m);
+        let pc3m = l2p.intersect(l3m);
 
         let modeP, modeM, adorner;
 
@@ -502,7 +537,51 @@ class Content extends React.Component {
             }
         }
 
+        let extendedModePath1 = ['L', ...pcp.getCoords()];
+        let extendedModePath2 = ['L', ...pcm.getCoords()];
+
+        if (state.extended && state.extendedMode === 1) {
+            let r = state.extendedCircle1Radius;
+            let outerCircle = new Circle(pc.x, pc.y, r);
+            let i0o = l0p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            let i1o = l3p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            if (i0o && i1o) {
+                extendedModePath1 = [
+                    'L', ...i0o.getCoords(),
+                    'A', r, r, 0, 1 / 192, 1 / 192, ...i1o.getCoords(),
+                ];
+            }
+
+            let i0i = l0m.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            let i1i = l3m.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            if (i0i && i1i && i0i.y > pcm.y) {
+                extendedModePath2 = [
+                    'L', ...i1i.getCoords(),
+                    'A', r, r, 0, 0, 0, ...i0i.getCoords(),
+                ];
+            }
+        }
+
+        let extendedPath = [];
+        if (state.extended) {
+            extendedPath = [
+                'M', ...pc1m.getCoords(),
+                'L', ...pc1p.getCoords(),
+                ...extendedModePath1,
+                'L', ...pc3p.getCoords(),
+                'L', ...pc3m.getCoords(),
+                ...extendedModePath2,
+                'Z',
+            ]
+        }
+
+        let extendedPathHole = [];
+        if (state.extended && state.extendedMode === 1 && state.extendedCircle2) {
+            extendedPathHole = this._drawCircle(pc.x, pc.y, state.extendedCircle2Radius);
+        }
+
         const path = [
+            ...extendedPath,
             'M', ...p0p.getCoords(),
             'L', ...p1p.getCoords(),
             ...modeP,
@@ -512,6 +591,7 @@ class Content extends React.Component {
             ...modeM,
             'L', ...p0m.getCoords(),
             'Z',
+            ...extendedPathHole,
         ];
 
         switch (adornerName) {
@@ -532,9 +612,9 @@ class Content extends React.Component {
                 break;
             case 'topHeight':
                 adorner = [
-                    ...this._drawCircle(zcx, zcy, 0.01),
-                    'M', zcx, zcy + 0.01,
-                    'L', zcx, zcy + ht,
+                    ...this._drawCircle(p2.x, p2.y - state.topHeight, 0.01),
+                    'M', p2.x, p2.y - state.topHeight + 0.01,
+                    'L', p2.x, p2.y,
                 ];
                 break;
             case 'bottomThickness':
@@ -555,6 +635,14 @@ class Content extends React.Component {
                     'M', ...p4.getCoords(),
                     'L', p4.x, 1,
                 ];
+                break;
+            case 'extended':
+            case 'extendedLength':
+                adorner = [
+                    ...this._drawCircle(p0.x, p0.y, 0.01),
+                    'M', ...Point.getVector(p0, p1).normalize().mult(0.01).shift(p0).getCoords(),
+                    'L', ...p1.getCoords(),
+                ]
                 break;
         }
 

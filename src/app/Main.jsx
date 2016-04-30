@@ -37,7 +37,7 @@ class Main extends React.Component {
                 'circle1': { title: 'Outer Circle', value: true },
                 'circle1Radius': { title: 'Radius', min: s => s.thickness / 2 + 0.001, max: s => s.thickness * 2, step: 0.001, validFor: { 'circle1': [true] }, adorner: 'circle1' },
                 'circle2': { title: 'Inner Hole', value: true },
-                'circle2Radius': { title: 'Radius', min: 0.01, max: s => s.circle1Radius - 0.001, step: 0.001, validFor: { 'circle2': [true] }, adorner: 'circle2' },
+                'circle2Radius': { title: 'Radius', min: 0.01, max: s => (s.circle1 ? s.circle1Radius : s.thickness / 2) - 0.001, step: 0.001, validFor: { 'circle2': [true] }, adorner: 'circle2' },
             },
             'Head': {
                 'headType': { title: 'Type', values: [{ title: 'Head 0', value: 0 }, { title: 'Head 1', value: 1 }, { title: 'Head 2', value: 2 }] },
@@ -65,12 +65,18 @@ class Main extends React.Component {
                 'bottomWidth': 'Bottom Width',
                 'bottomSpacing': { title: 'Bottom Spacing', min: 0.01, max: 0.2, step: 0.001 },
                 'topThickness': { title: 'Top Thickness', min: 0.01, max: 0.2, step: 0.001 },
-                'topWidth': 'Top Width',
+                'topWidth': { title: 'Top Width', validFor: { 'extended': [false] } },
                 'topHeight': { title: 'Top Height', validFor: { 'mode': [0] } },
                 'mode': { title: 'Mode', values: [{ title: 'Lines', value: 0 }, { title: 'Quadric', value: 1 }] },
                 'quadricCx': { title: 'Quadric Center dX', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
                 'quadricCy': { title: 'Quadric Center dY', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
                 'quadricR': { title: 'Quadric Radius', min: 0, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
+                'extended': { title: 'Extended', value: true },
+                'extendedLength': { title: 'Length', min: 0.1, max: 0.9, step: 0.001, validFor: { 'extended': [true] } },
+                'extendedMode': { title: 'Mode', values: [{ title: 'Angle Ending', value: 0 }, { title: 'Round', value: 1 }] },
+                'extendedCircle1Radius': { title: 'Radius', min: s => 0.001, max: 0.4, step: 0.001, validFor: { 'extendedMode': [1] } },
+                'extendedCircle2': { title: 'Inner Hole', value: true, validFor: { 'extendedMode': [1] } },
+                'extendedCircle2Radius': { title: 'Radius', min: 0.01, max: s => s.extendedCircle1Radius - 0.001, step: 0.001, validFor: { 'extendedCircle2': [true], 'extendedMode': [1] } },
             },
         }
 
@@ -112,6 +118,12 @@ class Main extends React.Component {
             quadricCy: 0.5,
             quadricR: 0.2,
             mode: 0,
+            extended: false,
+            extendedLength: 0.4,
+            extendedMode: 0,
+            extendedCircle1Radius: 0.1,
+            extendedCircle2: true,
+            extendedCircle2Radius: 0.02,
         };
 
         let hashState = { hammer: {}, support: {} };

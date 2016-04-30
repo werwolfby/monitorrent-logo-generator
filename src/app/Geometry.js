@@ -9,10 +9,20 @@ class Point {
     }
 
     getLengthTo(p2) {
-        let x = p2.x - this.x;
-        let y = p2.y - this.y;
+        let x = this.x;
+        let y = this.y;
+        if (p2) {
+            x = p2.x - x;
+            y = p2.y - y;
+        }
 
         return Math.sqrt(x * x + y * y);
+    }
+
+    normalize() {
+        let l = Math.sqrt(this.x * this.x + this.y * this.y);
+
+        return new Point(this.x / l, this.y / l);
     }
 
     shift(v) {
@@ -50,6 +60,12 @@ class Point {
         const dy = p1.y - p0.y;
         const x = p0.x + dx * scale;
         const y = p0.y + dy * scale;
+        return new Point(x, y);
+    }
+
+    static getVector(p0, p1) {
+        const x = p1.x - p0.x;
+        const y = p1.y - p0.y;
         return new Point(x, y);
     }
 }
