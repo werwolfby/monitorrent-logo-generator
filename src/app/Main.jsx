@@ -128,7 +128,11 @@ class Main extends React.Component {
 
         let hashState = { hammer: {}, support: {} };
         if (window.location.hash) {
-            hashState = JSON.parse(window.location.hash.substr(1));
+            try {
+                hashState = JSON.parse(decodeURI(window.location.hash.substr(1)));
+            } catch(e) {
+                alert("Can't decode url hash: " + e.message);
+            }
         }
 
         this.state = {
@@ -160,7 +164,7 @@ class Main extends React.Component {
             hammer: this.state.hammer,
             support: this.state.support,
         }
-        window.location.hash = JSON.stringify(settings);
+        window.location.hash = encodeURI(JSON.stringify(settings));
     }
 
     render() {
