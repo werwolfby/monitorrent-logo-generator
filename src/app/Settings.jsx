@@ -182,13 +182,13 @@ class Settings extends React.Component {
                     const validProps = Object.keys(prop.validFor);
                     for (let validProp = 0; validProp < validProps.length; validProp++) {
                         const validValues = prop.validFor[validProps[validProp]];
-                        const value = this.state.values[validProps];
-                        if (validValues.indexOf(value) >= 0) {
-                            return true;
+                        const value = this.state.values[validProps[validProp]];
+                        if (validValues.indexOf(value) === -1) {
+                            return false;
                         }
                     }
 
-                    return false;
+                    return true;
                 })
                 .map(prop => this._mapControl(prop));
         };
