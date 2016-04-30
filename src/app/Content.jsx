@@ -545,14 +545,16 @@ class Content extends React.Component {
             let outerCircle = new Circle(pc.x, pc.y, r);
             let i0o = l0p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
             let i1o = l3p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
-            extendedModePath1 = [
-                'L', ...i0o.getCoords(),
-                'A', r, r, 0, 1 / 192, 1 / 192, ...i1o.getCoords(),
-            ];
+            if (i0o && i1o) {
+                extendedModePath1 = [
+                    'L', ...i0o.getCoords(),
+                    'A', r, r, 0, 1 / 192, 1 / 192, ...i1o.getCoords(),
+                ];
+            }
 
             let i0i = l0m.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
             let i1i = l3m.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
-            if (i0i.y > pcm.y) {
+            if (i0i && i1i && i0i.y > pcm.y) {
                 extendedModePath2 = [
                     'L', ...i1i.getCoords(),
                     'A', r, r, 0, 0, 0, ...i0i.getCoords(),
