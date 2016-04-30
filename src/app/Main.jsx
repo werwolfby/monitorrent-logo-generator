@@ -39,12 +39,6 @@ class Main extends React.Component {
                 'circle2': { title: 'Inner Hole', value: true },
                 'circle2Radius': { title: 'Radius', min: 0.01, max: s => s.circle1Radius - 0.001, step: 0.001, validFor: { 'circle2': [true] }, adorner: 'circle2' },
             },
-            'Bulb': {
-                'bulb': { title: 'Bulb', value: true },
-                'bulbThickness': { title: 'Thickness', min: 0.01, max: 0.2, step: 0.001, validFor: { 'bulb': [true] } },
-                'bulbWidth': { title: 'Width', min: 0.01, max: s => s.left, validFor: { 'bulb': [true] } },
-                'bulbClose': { title: 'Close', value: true },
-            },
             'Head': {
                 'headType': { title: 'Type', values: [{ title: 'Head 0', value: 0 }, { title: 'Head 1', value: 1 }, { title: 'Head 2', value: 2 }] },
                 'headThickness': { title: 'Thickness', min: 0.01, max: 0.2, step: 0.001 },
@@ -56,17 +50,23 @@ class Main extends React.Component {
                 'headQdy': { title: 'Q dy', adorner: 'headQuadric' },
                 'close': { title: 'Close', value: true },
             },
+            'Bulb': {
+                'bulb': { title: 'Bulb', value: true },
+                'bulbThickness': { title: 'Thickness', min: 0.01, max: 0.2, step: 0.001, validFor: { 'bulb': [true] } },
+                'bulbWidth': { title: 'Width', min: 0.01, max: s => s.left, validFor: { 'bulb': [true] } },
+                'bulbClose': { title: 'Close', value: true },
+            },
         };
         this.supportProperties = {
             'Main': {
                 'cx': 'Center X',
                 'cy': 'Center Y',
-                'topThickness': { title: 'Top Thickness', min: 0.01, max: 0.2, step: 0.001 },
-                'topWidth': 'Top Width',
-                'topHeight': 'Top Height',
                 'bottomThickness': { title: 'Bottom Thickness', min: 0.01, max: 0.2, step: 0.001 },
                 'bottomWidth': 'Bottom Width',
                 'bottomSpacing': { title: 'Bottom Spacing', min: 0.01, max: 0.2, step: 0.001 },
+                'topThickness': { title: 'Top Thickness', min: 0.01, max: 0.2, step: 0.001 },
+                'topWidth': 'Top Width',
+                'topHeight': { title: 'Top Height', validFor: { 'mode': [0] } },
                 'mode': { title: 'Mode', values: [{ title: 'Lines', value: 0 }, { title: 'Quadric', value: 1 }] },
                 'quadricCx': { title: 'Quadric Center dX', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
                 'quadricCy': { title: 'Quadric Center dY', min: -0.5, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
