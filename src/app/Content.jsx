@@ -537,12 +537,24 @@ class Content extends React.Component {
             }
         }
 
+        let extendedModePath = ['L', ...pcp.getCoords()];
+
+        if (state.extended && state.extendedMode === 1) {
+            let outerCircle = new Circle(pc.x, pc.y, state.extendedCircle1Radius);
+            let i0 = l0p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            let i1 = l3p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            extendedModePath = [
+                'L', ...i0.getCoords(),
+                'A', state.extendedCircle1Radius, state.extendedCircle1Radius, 0, 1 / 192, 1 / 192, ...i1.getCoords(),
+            ];
+        }
+
         let extendedPath = [];
         if (state.extended) {
             extendedPath = [
                 'M', ...pc1m.getCoords(),
                 'L', ...pc1p.getCoords(),
-                'L', ...pcp.getCoords(),
+                ...extendedModePath,
                 'L', ...pc3p.getCoords(),
                 'L', ...pc3m.getCoords(),
                 'L', ...pcm.getCoords(),
