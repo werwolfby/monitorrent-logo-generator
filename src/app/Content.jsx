@@ -573,6 +573,11 @@ class Content extends React.Component {
             ]
         }
 
+        let extendedPathHole = [];
+        if (state.extended && state.extendedMode === 1 && state.extendedCircle2) {
+            extendedPathHole = this._drawCircle(pc.x, pc.y, state.extendedCircle2Radius);
+        }
+
         const path = [
             ...extendedPath,
             'M', ...p0p.getCoords(),
@@ -584,6 +589,7 @@ class Content extends React.Component {
             ...modeM,
             'L', ...p0m.getCoords(),
             'Z',
+            ...extendedPathHole,
         ];
 
         switch (adornerName) {
