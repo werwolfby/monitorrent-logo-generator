@@ -386,6 +386,27 @@ class Content extends React.Component {
 
     // Samson Post
     _getSupportPath(state, adornerName) {
+        /*
+         *                  pc(cx,cy)
+         *                     . .
+         *                    .   .
+         *                   .     .
+         *                  .       .
+         *                 .         .
+         *                .           .
+         *              p1p           p3p
+         *              p1            p3
+         *             /1m\          /3m\
+         *            /    \        /    \
+         *           /  l1m l1 m p l2 l2m \
+         *          /        \    /        \
+         *    l0p l0 l0m      \2p/     l3p l3 l3m
+         *        /            p2            \
+         *       /             2m             \
+         *      /                              \
+         * p0p p0 p0m                       p4p p4 p4m
+         *
+         */
         let zcx = state.cx;
         let zcy = state.cy;
         let wb = state.bottomWidth / 2;
@@ -396,11 +417,18 @@ class Content extends React.Component {
         let bottom = 1 - state.bottomSpacing;
         let top = zcy;
 
+        let pc = new Point(zcx, zcy);
         let p0 = new Point(zcx - wb, bottom);
         let p1 = new Point(zcx - wt, top);
         let p2 = new Point(zcx, top + ht);
         let p3 = new Point(zcx + wt, top);
         let p4 = new Point(zcx + wb, bottom);
+
+        if (state.extended) {
+            p1 = Point.getMiddle(p0, pc, state.extendedLength);
+            p2 = new Point(p2.x, p2.y + (p1.y - pc.y));
+            p3 = Point.getMiddle(p4, pc, state.extendedLength);
+        }
 
         let l0 = new Line(p0, p1);
         let l1 = new Line(p1, p2);
@@ -532,9 +560,9 @@ class Content extends React.Component {
                 break;
             case 'topHeight':
                 adorner = [
-                    ...this._drawCircle(zcx, zcy, 0.01),
-                    'M', zcx, zcy + 0.01,
-                    'L', zcx, zcy + ht,
+                    ...this._drawCircle(p2.x, p2.y - state.topHeight, 0.01),
+                    'M', p2.x, p2.y - state.topHeight + 0.01,
+                    'L', p2.x, p2.y,
                 ];
                 break;
             case 'bottomThickness':
@@ -555,6 +583,14 @@ class Content extends React.Component {
                     'M', ...p4.getCoords(),
                     'L', p4.x, 1,
                 ];
+                break;
+            case 'extended':
+            case 'extendedLength':
+                adorner = [
+                    ...this._drawCircle(p0.x, p0.y, 0.01),
+                    'M', ...Point.getVector(p0, p1).normalize().mult(0.01).shift(p0).getCoords(),
+                    'L', ...p1.getCoords(),
+                ]
                 break;
         }
 
