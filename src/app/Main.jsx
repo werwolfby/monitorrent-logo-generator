@@ -73,10 +73,10 @@ class Main extends React.Component {
                 'quadricR': { title: 'Quadric Radius', min: 0, max: 0.5, step: 0.001, validFor: { 'mode': [1] }, adorner: 'quadric' },
                 'extended': { title: 'Extended', value: true },
                 'extendedLength': { title: 'Length', min: 0.1, max: 0.9, step: 0.001, validFor: { 'extended': [true] } },
-                'extendedMode': { title: 'Mode', values: [{ title: 'Angle Ending', value: 0 }, { title: 'Round', value: 1 }] },
-                'extendedCircle1Radius': { title: 'Radius', min: s => 0.001, max: 0.4, step: 0.001, validFor: { 'extendedMode': [1] } },
-                'extendedCircle2': { title: 'Inner Hole', value: true, validFor: { 'extendedMode': [1] } },
-                'extendedCircle2Radius': { title: 'Radius', min: 0.01, max: s => s.extendedCircle1Radius - 0.001, step: 0.001, validFor: { 'extendedCircle2': [true], 'extendedMode': [1] } },
+                'extendedMode': { title: 'Mode', values: [{ title: 'Angle Ending', value: 0 }, { title: 'Round', value: 1 }], validFor: { 'extended': [true] } },
+                'extendedCircle1Radius': { title: 'Radius', min: s => 0.001, max: 0.4, step: 0.001, validFor: { 'extended': [true], 'extendedMode': [1] } },
+                'extendedCircle2': { title: 'Inner Hole', value: true, validFor: { 'extended': [true], 'extendedMode': [1] } },
+                'extendedCircle2Radius': { title: 'Radius', min: 0.01, max: s => s.extendedCircle1Radius - 0.001, step: 0.001, validFor: { 'extended': [true], 'extendedCircle2': [true], 'extendedMode': [1] } },
             },
         }
 
