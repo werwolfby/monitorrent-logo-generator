@@ -4,7 +4,8 @@
   "description": "Logo Setup for Monitorrent",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --progress --inline --colors"
+    "start": "webpack-dev-server --progress --inline --colors",
+    "build": "webpack --config webpack.config.prod.js --progress --colors"
   },
   "author": "Alexander Puzynia <werwolf.by@gmail.com>",
   "license": "MIT",
