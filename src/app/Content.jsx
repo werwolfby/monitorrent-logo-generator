@@ -387,20 +387,21 @@ class Content extends React.Component {
     // Samson Post
     _getSupportPath(state, adornerName) {
         /*
-         *                  pc(cx,cy)
-         *                     . .
-         *                    .   .
-         *                   .     .
-         *                  .       .
-         *                 .         .
-         *                .           .
-         *              p1p           p3p
-         *              p1            p3
+         *                    pcp
+         *                pc(zcx,zcy)
+         *                     ..
+         *                    .cm.
+         *                   .    .
+         *                  .      .
+         *                 .        .
+         *                .          .
+         *         pc1p p1p          p3p pc3p
+         *              p1 pc1m  pc3m p3
          *             /1m\          /3m\
          *            /    \        /    \
-         *           /  l1m l1 m p l2 l2m \
+         *           / l1m l1 1p2p l2 l2m\
          *          /        \    /        \
-         *    l0p l0 l0m      \2p/     l3p l3 l3m
+         *    l0p l0 l0m      \2p/     l3m l3 l3p
          *        /            p2            \
          *       /             2m             \
          *      /                              \
@@ -447,6 +448,9 @@ class Content extends React.Component {
         let p2p = l1p.intersect(l2p);
         let p3p = l2p.intersect(l3p);
         let p4p = l3p.intersect(lb);
+        let pcp = l0p.intersect(l3p);
+        let pc1p = p1p;
+        let pc3p = p3p;
 
         let l0m = l0.shift(-dtb);
         let l1m = l1.shift(-dtt);
@@ -458,6 +462,9 @@ class Content extends React.Component {
         let p2m = l1m.intersect(l2m);
         let p3m = l2m.intersect(l3m);
         let p4m = l3m.intersect(lb);
+        let pcm = l0m.intersect(l3m);
+        let pc1m = l1p.intersect(l0m);
+        let pc3m = l2p.intersect(l3m);
 
         let modeP, modeM, adorner;
 
@@ -530,7 +537,21 @@ class Content extends React.Component {
             }
         }
 
+        let extendedPath = [];
+        if (state.extended) {
+            extendedPath = [
+                'M', ...pc1m.getCoords(),
+                'L', ...pc1p.getCoords(),
+                'L', ...pcp.getCoords(),
+                'L', ...pc3p.getCoords(),
+                'L', ...pc3m.getCoords(),
+                'L', ...pcm.getCoords(),
+                'Z',
+            ]
+        }
+
         const path = [
+            ...extendedPath,
             'M', ...p0p.getCoords(),
             'L', ...p1p.getCoords(),
             ...modeP,
