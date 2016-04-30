@@ -537,16 +537,27 @@ class Content extends React.Component {
             }
         }
 
-        let extendedModePath = ['L', ...pcp.getCoords()];
+        let extendedModePath1 = ['L', ...pcp.getCoords()];
+        let extendedModePath2 = ['L', ...pcm.getCoords()];
 
         if (state.extended && state.extendedMode === 1) {
-            let outerCircle = new Circle(pc.x, pc.y, state.extendedCircle1Radius);
-            let i0 = l0p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
-            let i1 = l3p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
-            extendedModePath = [
-                'L', ...i0.getCoords(),
-                'A', state.extendedCircle1Radius, state.extendedCircle1Radius, 0, 1 / 192, 1 / 192, ...i1.getCoords(),
+            let r = state.extendedCircle1Radius;
+            let outerCircle = new Circle(pc.x, pc.y, r);
+            let i0o = l0p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            let i1o = l3p.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            extendedModePath1 = [
+                'L', ...i0o.getCoords(),
+                'A', r, r, 0, 1 / 192, 1 / 192, ...i1o.getCoords(),
             ];
+
+            let i0i = l0m.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            let i1i = l3m.intersect(outerCircle).sort((a, b) => b.y - a.y)[0];
+            if (i0i.y > pcm.y) {
+                extendedModePath2 = [
+                    'L', ...i1i.getCoords(),
+                    'A', r, r, 0, 0, 0, ...i0i.getCoords(),
+                ];
+            }
         }
 
         let extendedPath = [];
@@ -554,10 +565,10 @@ class Content extends React.Component {
             extendedPath = [
                 'M', ...pc1m.getCoords(),
                 'L', ...pc1p.getCoords(),
-                ...extendedModePath,
+                ...extendedModePath1,
                 'L', ...pc3p.getCoords(),
                 'L', ...pc3m.getCoords(),
-                'L', ...pcm.getCoords(),
+                ...extendedModePath2,
                 'Z',
             ]
         }
